@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="id"><head>
+<html lang="id">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
@@ -76,6 +77,11 @@
   .month.redup{border-style:dashed;background:var(--bg)}
   .month.redup .mbody,.month.redup .holbar,.month.redup .legend{opacity:.55}
   .legend.petunjuk{color:var(--muted);font-style:normal}
+  .logrow{display:flex;gap:12px;align-items:baseline;padding:5px 2px;font-size:12.5px;
+    border-bottom:1px solid var(--line)}
+  .logrow:last-child{border-bottom:0}
+  .logjam{flex:none;width:42px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .dh .chip{font-weight:500;margin-left:8px;vertical-align:2px}
   .chip.sembunyi{background:var(--holiday);border-color:#f0d6a8;color:var(--holiday-ink);
     font-weight:600}
   /* kolom nama dan total dipatok; kolom tanggal membagi sisa secara merata,
@@ -179,12 +185,13 @@
       <button data-mk="L"><span class="dot" style="background:var(--l)"></span>Cuti/Izin</button>
     </div>
     <select id="fYear"></select>
-    <select id="fMonth"><option value="">Semua bulan</option><option value="09">September</option></select>
-    <button id="bSave" class="adminOnly" title="Simpan seluruh jadwal ke berkas HTML" data-perlu="0">Simpan</button>
-    <button id="bUndo" class="adminOnly" hidden="">Batal</button>
+    <select id="fMonth"></select>
+    <button id="bSave" class="adminOnly" title="Simpan seluruh jadwal ke berkas HTML">Simpan</button>
+    <button id="bUndo" class="adminOnly" hidden>Batal</button>
     <button id="bAdd" class="primary adminOnly">+ Tambah Bulan</button>
     <button id="bBot" class="adminOnly">Asisten</button>
     <button id="bGh" class="adminOnly">GitHub</button>
+    <button id="bLog" class="adminOnly">Riwayat</button>
     <button id="bNames" class="adminOnly">Pegawai</button>
     <button id="bHol">Libur Nasional</button>
     <button id="bExport">Ekspor</button>
@@ -192,8 +199,8 @@
     <button id="bPrint">Cetak</button>
     <button id="bLogin">Masuk Admin</button>
     <span class="badge on adminOnly" id="adminBadge">Mode Admin</span>
-    <span class="badge adminOnly" id="pubBadge" hidden="">Tersimpan · belum terkirim</span>
-    <span class="badge adminOnly on" id="ghBadge"></span>
+    <span class="badge warn adminOnly" id="pubBadge" hidden>Belum diterbitkan</span>
+    <span class="badge adminOnly" id="ghBadge"></span>
     <button id="bPw" class="adminOnly">Ubah Sandi</button>
     <button id="bLogout" class="adminOnly">Keluar</button>
   </div>
@@ -219,7 +226,7 @@
       <div class="row"><label>Sandi lama</label><input type="password" id="pwOld"></div>
       <div class="row"><label>Sandi baru</label><input type="password" id="pwNew"></div>
       <div class="row"><label>Ulangi baru</label><input type="password" id="pwNew2"></div>
-      <div class="hint">Sandi baru hanya berlaku di browser ini. Agar berlaku untuk semua orang, setelah mengubah sandi pakai <b>Ekspor → Berkas HTML mandiri</b> lalu bagikan berkas hasilnya sebagai pengganti file lama.</div>
+      <div class="hint">Sandi baru hanya berlaku di browser ini. Agar berlaku untuk semua orang, setelah mengubah sandi pakai <b>Ekspor &rarr; Berkas HTML mandiri</b> lalu bagikan berkas hasilnya sebagai pengganti file lama.</div>
     </div>
     <div class="df"><button value="cancel">Batal</button><button value="ok" class="primary">Simpan</button></div>
   </form>
@@ -234,13 +241,23 @@
       <div class="row"><label>Isi awal</label>
         <select id="aFill">
           <option value="none">Kosong (isi manual)</option>
-          <option value="auto" selected="">Isi otomatis - rotasi merata di hari kerja</option>
+          <option value="auto" selected>Isi otomatis - rotasi merata di hari kerja</option>
         </select>
       </div>
       <div class="hint">Tanggal, nama hari, akhir pekan, dan hari libur nasional menyesuaikan otomatis. Bila tahun tersebut belum punya daftar libur, daftarnya dibuat otomatis lebih dulu.</div>
     </div>
     <div class="df"><button value="cancel">Batal</button><button value="ok" class="primary">Tambah</button></div>
   </form>
+</dialog>
+
+<dialog id="dlgLog">
+  <div class="dh">Riwayat Kegiatan <span class="chip" id="logJumlah"></span></div>
+  <div class="dc" id="logList"></div>
+  <div class="df">
+    <button id="logSalin">Unduh sebagai teks</button>
+    <button id="logHapus" class="danger">Kosongkan</button>
+    <button class="primary" id="logClose">Tutup</button>
+  </div>
 </dialog>
 
 <dialog id="dlgAuto">
@@ -276,7 +293,7 @@
       Tanggal tetap (1 Jan, 1 Mei, 1 Juni, 17 Agustus, 25 Desember) dan hari raya Kristen
       (Wafat serta Kenaikan Isa Almasih) dihitung pasti. Hari raya Islam dan Tahun Baru Imlek
       ditandai <i class="est">perkiraan</i> karena bisa meleset satu hari dari penetapan resmi.
-      <b>Nyepi, Waisak, dan cuti bersama belum termasuk</b> — silakan tambahkan sendiri.
+      <b>Nyepi, Waisak, dan cuti bersama belum termasuk</b> &mdash; silakan tambahkan sendiri.
       Cocokkan dengan SKB 3 Menteri sebelum dipakai.
     </div>
     <div class="row adminOnly" style="margin-bottom:14px">
@@ -327,9 +344,9 @@
       Token disimpan <b>hanya di browser ini</b>, pada tempat terpisah dari data jadwal,
       dan tidak pernah ikut ke dalam berkas yang dikirim ke GitHub. Pakai
       <b>fine-grained personal access token</b> yang dibatasi pada repo ini saja dengan
-      izin <b>Contents: Read and write</b> — jangan token bercakupan penuh.
+      izin <b>Contents: Read and write</b> &mdash; jangan token bercakupan penuh.
       Alamat repo, cabang, dan nama berkas ikut tersimpan bersama jadwal, jadi di
-      komputer lain tinggal mengisi tokennya saja. <b>Token tidak pernah ikut</b> —
+      komputer lain tinggal mengisi tokennya saja. <b>Token tidak pernah ikut</b> &mdash;
       ia hanya tinggal di browser ini. Siapa pun yang memakai komputer dan browser ini
       bisa memakainya, jadi hapus lewat <b>Lupakan Token</b> pada komputer bersama.
     </div>
@@ -343,10 +360,10 @@
       <input type="password" id="ghToken" placeholder="github_pat_..." autocomplete="off"></div>
     <div class="row"><label>Otomatis</label>
       <span style="flex:1;display:flex;align-items:center;gap:8px;font-size:12.5px">
-        <input type="checkbox" id="ghAuto" style="flex:none;width:auto" value="">
+        <input type="checkbox" id="ghAuto" style="flex:none;width:auto">
         <span>Kirim ke GitHub setiap kali tombol Simpan ditekan</span>
       </span></div>
-    <div id="ghStatus" class="botOut "></div>
+    <div id="ghStatus" class="botOut"></div>
     <div class="hint">
       Perlu repo yang sudah ada di GitHub. Bila pengiriman gagal, jadwal tetap aman
       tersimpan di browser dan penanda tetap menyala sampai berhasil terkirim.
@@ -365,7 +382,7 @@
   <div class="dh">Ekspor</div>
   <div class="dc">
     <div class="hint" style="margin:0 0 14px">Excel dan CSV memuat bulan yang sedang
-      ditampilkan saja — sesuaikan filter tahun dan bulan lebih dulu bila perlu.
+      ditampilkan saja &mdash; sesuaikan filter tahun dan bulan lebih dulu bila perlu.
       Cadangan data selalu memuat seluruh bulan.</div>
     <div class="row"><button id="xXls" style="flex:1">Excel (.xls)</button></div>
     <div class="row"><button id="xCsv" style="flex:1">CSV (.csv)</button></div>
@@ -377,7 +394,7 @@
 </dialog>
 
 <script>
-const SEED = {"names":["Syifa","Herry","Fiki","Dewa","Andri","Adit","Rizal","Clara","Pandu","Edu","Arry","Dwi"],"months":{"2026-07":{"year":2026,"month":7,"cells":{"Syifa":{"1":"M","8":"M","11":"P","15":"M"},"Herry":{"6":"M","16":"M","18":"P","22":"M","30":"M"},"Fiki":{"2":"M","13":"M","23":"M","31":"M"},"Adit":{"3":"M","14":"M","24":"M"},"Dewa":{"7":"M","19":"S","21":"M","28":"M"},"Andri":{"9":"M","17":"M","27":"M"},"Rizal":{"10":"M","20":"M","29":"M"},"Clara":{},"Pandu":{},"Edu":{},"Arry":{},"Dwi":{}},"sembunyi":true},"2026-08":{"year":2026,"month":8,"cells":{"Syifa":{"7":"M","13":"M","21":"M"},"Herry":{"4":"M","14":"M","23":"S","31":"M"},"Fiki":{"10":"M","16":"P","20":"M"},"Dewa":{"19":"M","24":"M"},"Adit":{"3":"M","12":"M","17":"S","27":"M"},"Andri":{"5":"M","11":"M","15":"P","26":"M"},"Rizal":{"6":"M","18":"M","22":"S","28":"M"},"Clara":{},"Pandu":{},"Edu":{},"Arry":{},"Dwi":{}},"sembunyi":true},"2026-09":{"year":2026,"month":9,"cells":{"Syifa":{"3":"M","9":"M","25":"M"},"Herry":{"18":"M","23":"M","28":"M"},"Fiki":{"4":"M","10":"M","21":"M"},"Dewa":{"14":"M","24":"M","30":"M"},"Adit":{"2":"M","11":"M","17":"M"},"Andri":{"7":"M","15":"M","29":"M"},"Rizal":{"1":"M","8":"M","16":"M","22":"M"},"Clara":{"7":"M","14":"M","21":"M","28":"M"},"Pandu":{"1":"M","8":"M","15":"M","22":"M","29":"M"},"Edu":{"4":"M","11":"M","18":"M","25":"M"},"Arry":{"3":"M","10":"M","17":"M","24":"M"},"Dwi":{"2":"M","9":"M","16":"M","23":"M","30":"M"}}}},"holidays":[{"date":"2026-01-01","name":"Tahun Baru Masehi 2026"},{"date":"2026-02-17","name":"Tahun Baru Imlek 2577 Kongzili"},{"date":"2026-03-19","name":"Hari Suci Nyepi (Tahun Baru Saka 1948)"},{"date":"2026-03-21","name":"Idul Fitri 1447 H (hari pertama)"},{"date":"2026-03-22","name":"Idul Fitri 1447 H (hari kedua)"},{"date":"2026-04-03","name":"Wafat Isa Almasih"},{"date":"2026-05-01","name":"Hari Buruh Internasional"},{"date":"2026-05-14","name":"Kenaikan Isa Almasih"},{"date":"2026-05-15","name":"Cuti Bersama Kenaikan Isa Almasih"},{"date":"2026-05-27","name":"Idul Adha 1447 H"},{"date":"2026-05-28","name":"Cuti Bersama Idul Adha 1447 H"},{"date":"2026-05-31","name":"Hari Raya Waisak 2570 BE"},{"date":"2026-06-01","name":"Hari Lahir Pancasila"},{"date":"2026-08-17","name":"HUT Kemerdekaan RI ke-81"},{"date":"2026-08-25","name":"Maulid Nabi Muhammad SAW 1448 H"},{"date":"2026-12-25","name":"Hari Raya Natal"}],"admin":{"hash":"1g6mb70-126me2y"},"stamp":"2026-09-10T08:20:14.195Z","belumTerbit":false,"teams":[{"nama":"SRR & CDR","anggota":["Syifa","Herry","Fiki","Dewa","Andri","Adit","Rizal"]},{"nama":"DDR","anggota":["Clara","Pandu","Edu","Arry","Dwi"]}],"ghRepo":{"repo":"JalinPembayaran-ops/Jadwal-Piket-Pagi","branch":"main","path":"index.html","otomatis":true}};
+const SEED = {"names":["Syifa","Herry","Fiki","Dewa","Andri","Adit","Rizal","Clara","Pandu","Edu","Arry","Dwi"],"months":{"2026-07":{"year":2026,"month":7,"cells":{"Syifa":{"1":"M","8":"M","11":"P","15":"M"},"Herry":{"6":"M","16":"M","18":"P","22":"M","30":"M"},"Fiki":{"2":"M","13":"M","23":"M","31":"M"},"Adit":{"3":"M","14":"M","24":"M"},"Dewa":{"7":"M","19":"S","21":"M","28":"M"},"Andri":{"9":"M","17":"M","27":"M"},"Rizal":{"10":"M","20":"M","29":"M"},"Clara":{},"Pandu":{},"Edu":{},"Arry":{},"Dwi":{}},"sembunyi":true},"2026-08":{"year":2026,"month":8,"cells":{"Syifa":{"7":"M","13":"M","21":"M"},"Herry":{"4":"M","14":"M","23":"S","31":"M"},"Fiki":{"10":"M","16":"P","20":"M"},"Dewa":{"19":"M","24":"M"},"Adit":{"3":"M","12":"M","17":"S","27":"M"},"Andri":{"5":"M","11":"M","15":"P","26":"M"},"Rizal":{"6":"M","18":"M","22":"S","28":"M"},"Clara":{},"Pandu":{},"Edu":{},"Arry":{},"Dwi":{}},"sembunyi":true},"2026-09":{"year":2026,"month":9,"cells":{"Syifa":{"3":"M","9":"M","25":"M"},"Herry":{"18":"M","23":"M","28":"M"},"Fiki":{"4":"M","10":"M","21":"M"},"Dewa":{"14":"M","24":"M","30":"M"},"Adit":{"2":"M","11":"M","17":"M"},"Andri":{"7":"M","15":"M","29":"M"},"Rizal":{"1":"M","8":"M","16":"M","22":"M"},"Clara":{"7":"M","14":"M","21":"M","28":"M"},"Pandu":{"1":"M","8":"M","15":"M","22":"M","29":"M"},"Edu":{"4":"M","11":"M","18":"M","25":"M"},"Arry":{"3":"M","10":"M","17":"M","24":"M"},"Dwi":{"2":"M","9":"M","16":"M","23":"M","30":"M"}}}},"holidays":[{"date":"2026-01-01","name":"Tahun Baru Masehi 2026"},{"date":"2026-02-17","name":"Tahun Baru Imlek 2577 Kongzili"},{"date":"2026-03-19","name":"Hari Suci Nyepi (Tahun Baru Saka 1948)"},{"date":"2026-03-21","name":"Idul Fitri 1447 H (hari pertama)"},{"date":"2026-03-22","name":"Idul Fitri 1447 H (hari kedua)"},{"date":"2026-04-03","name":"Wafat Isa Almasih"},{"date":"2026-05-01","name":"Hari Buruh Internasional"},{"date":"2026-05-14","name":"Kenaikan Isa Almasih"},{"date":"2026-05-15","name":"Cuti Bersama Kenaikan Isa Almasih"},{"date":"2026-05-27","name":"Idul Adha 1447 H"},{"date":"2026-05-28","name":"Cuti Bersama Idul Adha 1447 H"},{"date":"2026-05-31","name":"Hari Raya Waisak 2570 BE"},{"date":"2026-06-01","name":"Hari Lahir Pancasila"},{"date":"2026-08-17","name":"HUT Kemerdekaan RI ke-81"},{"date":"2026-08-25","name":"Maulid Nabi Muhammad SAW 1448 H"},{"date":"2026-12-25","name":"Hari Raya Natal"}],"admin":{"hash":"1g6mb70-126me2y"},"stamp":"2026-09-10T15:44:06+07:00","belumTerbit":false,"teams":[{"nama":"SRR & CDR","anggota":["Syifa","Herry","Fiki","Dewa","Andri","Adit","Rizal"]},{"nama":"DDR","anggota":["Clara","Pandu","Edu","Arry","Dwi"]}],"ghRepo":{"repo":"JalinPembayaran-ops/Jadwal-Piket-Pagi","branch":"main","path":"index.html","otomatis":true}};
 
 const MK = {
   M:{label:"Masuk Pagi", glyph:"✓"},
@@ -461,7 +478,7 @@ function simpanSekarang(){
   if(!tulis()){ toast("Perubahan tidak tersimpan di browser ini"); tandaTerbit(); return false; }
   draf = false;
   tandaTerbit();
-  toast("Jadwal tersimpan");
+  aksi("Jadwal disimpan");
   return true;
 }
 // kembalikan ke keadaan terakhir yang sudah disimpan
@@ -471,7 +488,7 @@ function batalkan(){
   state = JSON.parse(tersimpan);
   draf = false;
   tandaTerbit(); buildFilters(); render();
-  toast("Perubahan dibatalkan");
+  aksi("Perubahan sejak simpanan terakhir dibatalkan");
 }
 // tampilkan penanda selama masih ada suntingan yang belum masuk ke berkas
 function tandaTerbit(){
@@ -806,14 +823,16 @@ document.getElementById("app").addEventListener("click", e => {
     if(act === "sembunyi"){
       mo.sembunyi = !mo.sembunyi;
       tandai(); buildFilters(); render();
-      toast(BULAN[mo.month-1]+" "+mo.year+(mo.sembunyi
+      aksi(BULAN[mo.month-1]+" "+mo.year+(mo.sembunyi
         ? " disembunyikan dari tim" : " ditampilkan kembali"));
     }else if(act === "del"){
       if(!confirm("Hapus bulan "+BULAN[mo.month-1]+" "+mo.year+"?")) return;
-      delete state.months[key]; tandai(); buildFilters(); render(); toast("Bulan dihapus");
+      delete state.months[key]; tandai(); buildFilters(); render();
+      aksi("Bulan " + BULAN[mo.month-1] + " " + mo.year + " dihapus");
     }else if(act === "clear"){
       if(!confirm("Kosongkan semua tanda di bulan ini?")) return;
-      mo.cells = {}; tandai(); render(); toast("Bulan dikosongkan");
+      mo.cells = {}; tandai(); render();
+      aksi(BULAN[mo.month-1] + " " + mo.year + " dikosongkan");
     }else if(act === "auto"){
       autoKey = key;
       document.getElementById("autoBulan").textContent =
@@ -841,7 +860,7 @@ document.getElementById("app").addEventListener("click", e => {
     pesan = kapan + (lama ? " — " + MK[lama].label + " diganti " + MK[pen].label
                           : " — ditandai " + MK[pen].label);
   }
-  tandai(); toast(pesan);
+  tandai(); aksi(pesan);
   render();
 });
 document.getElementById("app").addEventListener("contextmenu", e => {
@@ -856,7 +875,7 @@ document.getElementById("app").addEventListener("contextmenu", e => {
     delete row[td.dataset.d];
     const pesan = td.dataset.n + " · " + td.dataset.d + " " + BULAN[mo.month-1] + " " +
                   mo.year + " — tanda " + MK[lama].label + " dihapus";
-    tandai(); toast(pesan);
+    tandai(); aksi(pesan);
     render();
   }
 });
@@ -960,7 +979,7 @@ dlgPw.addEventListener("close", () => {
   if(n.length < 4) return toast("Sandi baru minimal 4 karakter");
   if(n !== n2) return toast("Ulangan sandi baru tidak sama");
   state.admin.hash = hashPw(n); tulis();
-  toast("Sandi diperbarui di browser ini");
+  aksi("Kata sandi admin diubah");
 });
 
 /* ---------- tambah bulan ---------- */
@@ -993,7 +1012,7 @@ dlgAdd.addEventListener("close", () => {
   if(document.getElementById("aFill").value === "auto") autoFill(key);
   filterYear = "";
   tandai(); buildFilters(); render();
-  toast(BULAN[m-1]+" "+y+" ditambahkan" + (added ? " · "+added+" hari libur "+y+" ikut dibuat" : ""));
+  aksi(BULAN[m-1]+" "+y+" ditambahkan" + (added ? " · "+added+" hari libur "+y+" ikut dibuat" : ""));
   const el = document.querySelector('.month[data-k="'+key+'"]');
   if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
 });
@@ -1008,8 +1027,8 @@ dlgAuto.addEventListener("close", () => {
   const mo = state.months[autoKey];
   autoFill(autoKey, null, pilih);
   tandai(); render();
-  toast((pilih === null ? "Semua tim" : state.teams[pilih].nama) + " di " +
-        BULAN[mo.month-1] + " " + mo.year + " terisi otomatis");
+  aksi((pilih === null ? "Semua tim" : state.teams[pilih].nama) + " di " +
+       BULAN[mo.month-1] + " " + mo.year + " terisi otomatis");
   autoKey = null;
 });
 
@@ -1056,8 +1075,10 @@ function namaUnik(dasar){
 
 document.getElementById("bNames").onclick = () => { renderNames(); dlgNames.showModal(); };
 document.getElementById("nAdd").onclick = () => {
-  state.teams.push({nama: namaTimUnik("Tim Baru"), anggota: []});
+  const t = {nama: namaTimUnik("Tim Baru"), anggota: []};
+  state.teams.push(t);
   segarkanNama(); tandai(); renderNames(); render();
+  aksi("Tim " + t.nama + " ditambahkan");
 };
 function namaTimUnik(dasar){
   let n = dasar, i = 2;
@@ -1073,8 +1094,10 @@ document.getElementById("nameList").addEventListener("change", e => {
     const t = state.teams[+inp.dataset.timnama];
     const baru = inp.value.trim();
     if(!baru){ inp.value = t.nama; return; }
+    const dulu = t.nama;
     t.nama = baru;
     tandai(); renderNames(); render();
+    catat("Nama tim " + dulu + " diubah menjadi " + baru);
     return;
   }
 
@@ -1090,6 +1113,7 @@ document.getElementById("nameList").addEventListener("change", e => {
   tim.anggota[i] = baru;
   gantiNama(lama, baru);
   segarkanNama(); tandai(); render();
+  catat("Nama pegawai " + lama + " diubah menjadi " + baru);
 });
 
 document.getElementById("nameList").addEventListener("click", e => {
@@ -1098,8 +1122,10 @@ document.getElementById("nameList").addEventListener("click", e => {
 
   if(d.timadd !== undefined){
     const tim = state.teams[+d.timadd];
-    tim.anggota.push(namaUnik("Pegawai"));
+    const nm = namaUnik("Pegawai");
+    tim.anggota.push(nm);
     segarkanNama();
+    catat(nm + " ditambahkan ke " + tim.nama);
   }
   else if(d.timdel !== undefined){
     const tim = state.teams[+d.timdel];
@@ -1108,6 +1134,7 @@ document.getElementById("nameList").addEventListener("click", e => {
                 " pegawai dan semua tandanya?")) return;
     for(const n of tim.anggota)
       for(const k in state.months) delete state.months[k].cells[n];
+    catat("Tim " + tim.nama + " dihapus beserta " + tim.anggota.length + " pegawai");
     state.teams.splice(+d.timdel, 1);
     segarkanNama();
   }
@@ -1124,6 +1151,7 @@ document.getElementById("nameList").addEventListener("click", e => {
     tim.anggota.splice(+d.del, 1);
     for(const k in state.months) delete state.months[k].cells[n];
     segarkanNama();
+    catat(n + " dihapus dari " + tim.nama);
   }
   else if(d.up !== undefined || d.down !== undefined){
     const tim = state.teams[+d.tim];
@@ -1178,7 +1206,7 @@ document.getElementById("hGen").onclick = () => {
       " tanggal. Ganti dengan daftar hasil perhitungan ("+gen.length+" tanggal)?")) return;
   state.holidays = state.holidays.filter(h => !(h.date||"").startsWith(String(y))).concat(gen);
   tandai(); renderHol(); render();
-  toast(gen.length+" hari libur tahun "+y+" disusun");
+  aksi(gen.length+" hari libur tahun "+y+" disusun otomatis");
 };
 document.getElementById("hAdd").onclick = () => {
   const t = new Date();
@@ -1356,7 +1384,7 @@ function terbitkanBerkas(){
   if(!b){ toast("Gagal menyusun berkas HTML"); return false; }
   download("Jadwal Piket.html", "text/html", b.html);
   catatTerbit(b.stamp);
-  toast("Jadwal tersimpan ke berkas — ganti index.html dengan hasil unduhan ini");
+  aksi("Berkas HTML diterbitkan");
   return true;
 }
 
@@ -1512,7 +1540,7 @@ document.getElementById("ghKirim").onclick = async () => {
   ghStatus("Mengirim ke GitHub...", "");
   const r = await kirimKeGitHub("Perbarui jadwal piket");
   ghStatus(r.ok ? "Terkirim ke " + gh.repo : r.pesan, r.ok ? "ok" : "bad");
-  if(r.ok) toast("Jadwal terkirim ke GitHub");
+  if(r.ok) aksi("Jadwal dikirim ke GitHub");
 };
 
 document.getElementById("xHtml").onclick = () => {
@@ -1528,8 +1556,8 @@ document.getElementById("bSave").onclick = async () => {
     return toast("Tersimpan. Pengiriman otomatis mati — pakai GitHub, Kirim Sekarang");
   toast("Tersimpan. Mengirim ke GitHub...");
   const r = await kirimKeGitHub("Perbarui jadwal piket");
-  toast(r.ok ? "Tersimpan dan terkirim ke GitHub"
-             : "Tersimpan di browser, tetapi gagal kirim ke GitHub — " + r.pesan);
+  aksi(r.ok ? "Jadwal dikirim ke GitHub"
+            : "Gagal kirim ke GitHub — " + r.pesan);
 };
 document.getElementById("bUndo").onclick = batalkan;
 
@@ -1552,7 +1580,7 @@ document.getElementById("bImport").onclick = () => {
         d.holidays = d.holidays || [];
         d.admin = d.admin || state.admin;
         pastikanTim(d);
-        state = d; tandai(); buildFilters(); render(); toast("Data berhasil diimpor");
+        state = d; tandai(); buildFilters(); render(); aksi("Data diimpor dari berkas cadangan");
       }catch(e){ toast("Berkas tidak dikenali"); }
     };
     rd.readAsText(f);
@@ -1753,7 +1781,8 @@ function botKirim(){
   const out = document.getElementById("botOut");
   const r = botJalan(document.getElementById("botCmd").value);
   if(r.ok){
-    if(r.ubah){ tandai(); buildFilters(); render(); }
+    if(r.ubah){ tandai(); buildFilters(); render();
+      catat("Asisten: " + document.getElementById("botCmd").value.trim()); }
     out.className = "botOut ok";
     out.innerHTML = r.html;
     if(r.fokus){
@@ -1770,6 +1799,77 @@ document.getElementById("botCmd").addEventListener("keydown", e => {
   if(e.key === "Enter"){ e.preventDefault(); botKirim(); }
 });
 
+
+
+/* ---------- riwayat kegiatan ----------
+   Mencatat apa yang diubah dan kapan. Halaman ini hanya punya satu akun admin,
+   jadi catatan menerangkan tindakannya, bukan siapa pelakunya.              */
+const LOG_MAKS = 200;
+
+function catat(teks){
+  if(!Array.isArray(state.log)) state.log = [];
+  state.log.push({t: new Date().toISOString(), a: teks});
+  if(state.log.length > LOG_MAKS) state.log.splice(0, state.log.length - LOG_MAKS);
+}
+// catat sekaligus tampilkan pemberitahuannya
+function aksi(teks){ catat(teks); toast(teks); }
+
+function waktuSingkat(iso){
+  const t = new Date(iso);
+  if(isNaN(t)) return "";
+  return pad(t.getHours()) + "." + pad(t.getMinutes());
+}
+function tanggalPanjang(iso){
+  const t = new Date(iso);
+  if(isNaN(t)) return "Tanpa tanggal";
+  const kemarin = new Date(); kemarin.setDate(kemarin.getDate() - 1);
+  const sama = (a,b) => a.toDateString() === b.toDateString();
+  if(sama(t, new Date())) return "Hari ini";
+  if(sama(t, kemarin)) return "Kemarin";
+  return HARI[t.getDay()] + ", " + t.getDate() + " " + BULAN[t.getMonth()] + " " + t.getFullYear();
+}
+
+function renderLog(){
+  const wadah = document.getElementById("logList");
+  const daftar = (state.log || []).slice().reverse();
+  if(!daftar.length){
+    wadah.innerHTML = '<div class="hint" style="margin:0">Belum ada kegiatan tercatat.</div>';
+    return;
+  }
+  let html = "", hariTerakhir = null;
+  for(const e of daftar){
+    const hari = tanggalPanjang(e.t);
+    if(hari !== hariTerakhir){
+      html += '<div class="yrhead">' + esc(hari) + "</div>";
+      hariTerakhir = hari;
+    }
+    html += '<div class="logrow"><span class="logjam">' + waktuSingkat(e.t) +
+            "</span><span>" + esc(e.a) + "</span></div>";
+  }
+  document.getElementById("logJumlah").textContent =
+    daftar.length + " kegiatan" + (daftar.length >= LOG_MAKS ? " (terakhir saja)" : "");
+  wadah.innerHTML = html;
+}
+
+const dlgLog = document.getElementById("dlgLog");
+document.getElementById("bLog").onclick = () => { renderLog(); dlgLog.showModal(); };
+document.getElementById("logClose").onclick = () => dlgLog.close();
+document.getElementById("logHapus").onclick = () => {
+  if(!(state.log || []).length) return toast("Riwayat masih kosong");
+  if(!confirm("Kosongkan seluruh riwayat kegiatan?")) return;
+  state.log = [];
+  tandai(); renderLog();
+  toast("Riwayat dikosongkan");
+};
+document.getElementById("logSalin").onclick = () => {
+  const daftar = (state.log || []).slice().reverse();
+  if(!daftar.length) return toast("Riwayat masih kosong");
+  const baris = daftar.map(e => {
+    const t = new Date(e.t);
+    return (isNaN(t) ? "" : t.toLocaleString("id-ID")) + "  " + e.a;
+  });
+  download("Riwayat Jadwal Piket.txt", "text/plain", baris.join("\r\n"));
+};
 
 /* ---------- pemberitahuan versi baru ----------
    Browser menyimpan salinan halaman ini di cache, jadi sesudah jadwal
@@ -1824,6 +1924,5 @@ let resume = false;
 try{ resume = sessionStorage.getItem(SKEY) === "1"; }catch(e){}
 setAdmin(resume);
 </script>
-
-
-</body></html>
+</body>
+</html>
