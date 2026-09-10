@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="id"><head>
+<html lang="id">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
@@ -68,6 +69,16 @@
   .chip{font-size:11.5px;color:var(--muted);background:var(--bg);border:1px solid var(--line);
     border-radius:20px;padding:2px 9px}
   .mbody{overflow-x:auto}
+  .tim + .tim{border-top:1px solid var(--line)}
+  .timhead{display:flex;align-items:center;gap:9px;padding:9px 16px;background:var(--bg);
+    border-bottom:1px solid var(--line);font-size:13px}
+  .timhead b{font-weight:650;letter-spacing:-.01em}
+  .timkosong{padding:14px 16px;font-size:12.5px;color:var(--muted)}
+  .month.redup{border-style:dashed;background:var(--bg)}
+  .month.redup .mbody,.month.redup .holbar,.month.redup .legend{opacity:.55}
+  .legend.petunjuk{color:var(--muted);font-style:normal}
+  .chip.sembunyi{background:var(--holiday);border-color:#f0d6a8;color:var(--holiday-ink);
+    font-weight:600}
   /* kolom nama dan total dipatok; kolom tanggal membagi sisa secara merata,
      jadi setiap bulan sama lebar berapa pun jumlah harinya */
   table{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;
@@ -169,21 +180,21 @@
       <button data-mk="L"><span class="dot" style="background:var(--l)"></span>Cuti/Izin</button>
     </div>
     <select id="fYear"></select>
-    <select id="fMonth"><option value="">Semua bulan</option><option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option></select>
-    <button id="bSave" class="adminOnly" title="Simpan seluruh jadwal ke berkas HTML" data-perlu="0">Simpan</button>
-    <button id="bUndo" class="adminOnly" hidden="">Batal</button>
+    <select id="fMonth"></select>
+    <button id="bSave" class="adminOnly" title="Simpan seluruh jadwal ke berkas HTML">Simpan</button>
+    <button id="bUndo" class="adminOnly" hidden>Batal</button>
     <button id="bAdd" class="primary adminOnly">+ Tambah Bulan</button>
     <button id="bBot" class="adminOnly">Asisten</button>
     <button id="bGh" class="adminOnly">GitHub</button>
-    <button id="bNames" class="adminOnly">Petugas</button>
+    <button id="bNames" class="adminOnly">Pegawai</button>
     <button id="bHol">Libur Nasional</button>
     <button id="bExport">Ekspor</button>
     <button id="bImport" class="adminOnly">Impor</button>
     <button id="bPrint">Cetak</button>
     <button id="bLogin">Masuk Admin</button>
     <span class="badge on adminOnly" id="adminBadge">Mode Admin</span>
-    <span class="badge adminOnly" id="pubBadge" hidden="">Tersimpan · belum terkirim</span>
-    <span class="badge adminOnly on" id="ghBadge"></span>
+    <span class="badge warn adminOnly" id="pubBadge" hidden>Belum diterbitkan</span>
+    <span class="badge adminOnly" id="ghBadge"></span>
     <button id="bPw" class="adminOnly">Ubah Sandi</button>
     <button id="bLogout" class="adminOnly">Keluar</button>
   </div>
@@ -196,7 +207,7 @@
     <div class="dh">Masuk sebagai Admin</div>
     <div class="dc">
       <div class="row"><label>Kata sandi</label><input type="password" id="pwInput" autocomplete="current-password"></div>
-      <div class="hint">Hanya admin yang dapat menambah bulan, mengubah tanda jadwal, mengatur petugas, dan menyunting daftar libur. Tanpa masuk, halaman ini hanya bisa dilihat dan dicetak.</div>
+      <div class="hint">Hanya admin yang dapat menambah bulan, mengubah tanda jadwal, mengatur pegawai, dan menyunting daftar libur. Tanpa masuk, halaman ini hanya bisa dilihat dan dicetak.</div>
     </div>
     <div class="df"><button value="cancel">Batal</button><button value="ok" class="primary">Masuk</button></div>
   </form>
@@ -209,7 +220,7 @@
       <div class="row"><label>Sandi lama</label><input type="password" id="pwOld"></div>
       <div class="row"><label>Sandi baru</label><input type="password" id="pwNew"></div>
       <div class="row"><label>Ulangi baru</label><input type="password" id="pwNew2"></div>
-      <div class="hint">Sandi baru hanya berlaku di browser ini. Agar berlaku untuk semua orang, setelah mengubah sandi pakai <b>Ekspor → Berkas HTML mandiri</b> lalu bagikan berkas hasilnya sebagai pengganti file lama.</div>
+      <div class="hint">Sandi baru hanya berlaku di browser ini. Agar berlaku untuk semua orang, setelah mengubah sandi pakai <b>Ekspor &rarr; Berkas HTML mandiri</b> lalu bagikan berkas hasilnya sebagai pengganti file lama.</div>
     </div>
     <div class="df"><button value="cancel">Batal</button><button value="ok" class="primary">Simpan</button></div>
   </form>
@@ -224,7 +235,7 @@
       <div class="row"><label>Isi awal</label>
         <select id="aFill">
           <option value="none">Kosong (isi manual)</option>
-          <option value="auto" selected="">Isi otomatis - rotasi merata di hari kerja</option>
+          <option value="auto" selected>Isi otomatis - rotasi merata di hari kerja</option>
         </select>
       </div>
       <div class="hint">Tanggal, nama hari, akhir pekan, dan hari libur nasional menyesuaikan otomatis. Bila tahun tersebut belum punya daftar libur, daftarnya dibuat otomatis lebih dulu.</div>
@@ -233,11 +244,27 @@
   </form>
 </dialog>
 
+<dialog id="dlgAuto">
+  <form method="dialog">
+    <div class="dh">Isi Otomatis</div>
+    <div class="dc">
+      <div class="row"><label>Bulan</label>
+        <span id="autoBulan" style="flex:1;font-weight:650"></span></div>
+      <div class="row"><label>Tim</label><select id="autoTim"></select></div>
+      <div class="hint">Tanda pada tim yang dipilih akan ditimpa oleh rotasi baru;
+        tim lain tidak tersentuh. Akhir pekan dan hari libur nasional dilewati, dan
+        urutannya melanjutkan giliran dari bulan sebelumnya.</div>
+    </div>
+    <div class="df"><button value="cancel">Batal</button>
+      <button value="ok" class="primary">Isi</button></div>
+  </form>
+</dialog>
+
 <dialog id="dlgNames">
-  <div class="dh">Daftar Petugas</div>
+  <div class="dh">Tim &amp; Pegawai</div>
   <div class="dc" id="nameList"></div>
   <div class="df">
-    <button id="nAdd">+ Tambah Petugas</button>
+    <button id="nAdd">+ Tambah Tim</button>
     <button class="primary" id="nClose">Selesai</button>
   </div>
 </dialog>
@@ -250,7 +277,7 @@
       Tanggal tetap (1 Jan, 1 Mei, 1 Juni, 17 Agustus, 25 Desember) dan hari raya Kristen
       (Wafat serta Kenaikan Isa Almasih) dihitung pasti. Hari raya Islam dan Tahun Baru Imlek
       ditandai <i class="est">perkiraan</i> karena bisa meleset satu hari dari penetapan resmi.
-      <b>Nyepi, Waisak, dan cuti bersama belum termasuk</b> — silakan tambahkan sendiri.
+      <b>Nyepi, Waisak, dan cuti bersama belum termasuk</b> &mdash; silakan tambahkan sendiri.
       Cocokkan dengan SKB 3 Menteri sebelum dipakai.
     </div>
     <div class="row adminOnly" style="margin-bottom:14px">
@@ -283,8 +310,8 @@
       Asisten ini menghitung sendiri di dalam halaman, tanpa menghubungi layanan mana pun,
       jadi tetap bekerja walau berkas dibuka tanpa internet. Yang dikenali:
       <b>susun</b> (buat sekaligus isi satu bulan, boleh disertai catatan cuti),
-      <b>rekap</b> (hitung tugas per petugas untuk bulan yang tampil),
-      <b>tukar</b> (tukar jadwal dua petugas), dan <b>kosongkan</b>.
+      <b>rekap</b> (hitung tugas per pegawai untuk bulan yang tampil),
+      <b>tukar</b> (tukar jadwal dua pegawai), dan <b>kosongkan</b>.
       Bila bulan tidak disebut, yang dipakai adalah bulan yang sedang tampil di filter.
     </div>
   </div>
@@ -301,9 +328,11 @@
       Token disimpan <b>hanya di browser ini</b>, pada tempat terpisah dari data jadwal,
       dan tidak pernah ikut ke dalam berkas yang dikirim ke GitHub. Pakai
       <b>fine-grained personal access token</b> yang dibatasi pada repo ini saja dengan
-      izin <b>Contents: Read and write</b> — jangan token bercakupan penuh.
-      Siapa pun yang memakai komputer dan browser ini bisa memakai token tersebut,
-      jadi hapus lewat <b>Lupakan Token</b> bila memakai komputer bersama.
+      izin <b>Contents: Read and write</b> &mdash; jangan token bercakupan penuh.
+      Alamat repo, cabang, dan nama berkas ikut tersimpan bersama jadwal, jadi di
+      komputer lain tinggal mengisi tokennya saja. <b>Token tidak pernah ikut</b> &mdash;
+      ia hanya tinggal di browser ini. Siapa pun yang memakai komputer dan browser ini
+      bisa memakainya, jadi hapus lewat <b>Lupakan Token</b> pada komputer bersama.
     </div>
     <div class="row"><label>Repo</label>
       <input type="text" id="ghRepo" placeholder="akun/jadwal-piket"></div>
@@ -315,10 +344,10 @@
       <input type="password" id="ghToken" placeholder="github_pat_..." autocomplete="off"></div>
     <div class="row"><label>Otomatis</label>
       <span style="flex:1;display:flex;align-items:center;gap:8px;font-size:12.5px">
-        <input type="checkbox" id="ghAuto" style="flex:none;width:auto" value="">
+        <input type="checkbox" id="ghAuto" style="flex:none;width:auto">
         <span>Kirim ke GitHub setiap kali tombol Simpan ditekan</span>
       </span></div>
-    <div id="ghStatus" class="botOut "></div>
+    <div id="ghStatus" class="botOut"></div>
     <div class="hint">
       Perlu repo yang sudah ada di GitHub. Bila pengiriman gagal, jadwal tetap aman
       tersimpan di browser dan penanda tetap menyala sampai berhasil terkirim.
@@ -337,7 +366,7 @@
   <div class="dh">Ekspor</div>
   <div class="dc">
     <div class="hint" style="margin:0 0 14px">Excel dan CSV memuat bulan yang sedang
-      ditampilkan saja — sesuaikan filter tahun dan bulan lebih dulu bila perlu.
+      ditampilkan saja &mdash; sesuaikan filter tahun dan bulan lebih dulu bila perlu.
       Cadangan data selalu memuat seluruh bulan.</div>
     <div class="row"><button id="xXls" style="flex:1">Excel (.xls)</button></div>
     <div class="row"><button id="xCsv" style="flex:1">CSV (.csv)</button></div>
@@ -349,7 +378,7 @@
 </dialog>
 
 <script>
-const SEED = {"names":["Syifa","Herry","Fiki","Adit","Dewa","Andri","Rizal"],"months":{"2026-07":{"year":2026,"month":7,"cells":{"Syifa":{"1":"M","8":"M","11":"P","15":"M"},"Herry":{"6":"M","16":"M","18":"P","22":"M","30":"M"},"Fiki":{"2":"M","13":"M","23":"M","31":"M"},"Adit":{"3":"M","14":"M","24":"M"},"Dewa":{"7":"M","19":"S","21":"M","28":"M"},"Andri":{"9":"M","17":"M","27":"M"},"Rizal":{"10":"M","20":"M","29":"M"}}},"2026-08":{"year":2026,"month":8,"cells":{"Syifa":{"7":"M","13":"M","21":"M"},"Herry":{"4":"M","14":"M","23":"S","31":"M"},"Fiki":{"10":"M","16":"P","20":"M"},"Dewa":{"19":"M","24":"M"},"Adit":{"3":"M","12":"M","17":"S","27":"M"},"Andri":{"5":"M","11":"M","15":"P","26":"M"},"Rizal":{"6":"M","18":"M","22":"S","28":"M"}}},"2026-09":{"year":2026,"month":9,"cells":{"Syifa":{"3":"M","9":"M","25":"M"},"Herry":{"18":"M","23":"M","28":"M"},"Fiki":{"4":"M","10":"M","21":"M"},"Dewa":{"14":"M","24":"M","30":"M"},"Adit":{"2":"M","11":"M","17":"M"},"Andri":{"7":"M","15":"M","29":"M"},"Rizal":{"1":"M","8":"M","16":"M","22":"M"}}}},"holidays":[{"date":"2026-01-01","name":"Tahun Baru Masehi 2026"},{"date":"2026-02-17","name":"Tahun Baru Imlek 2577 Kongzili"},{"date":"2026-03-19","name":"Hari Suci Nyepi (Tahun Baru Saka 1948)"},{"date":"2026-03-21","name":"Idul Fitri 1447 H (hari pertama)"},{"date":"2026-03-22","name":"Idul Fitri 1447 H (hari kedua)"},{"date":"2026-04-03","name":"Wafat Isa Almasih"},{"date":"2026-05-01","name":"Hari Buruh Internasional"},{"date":"2026-05-14","name":"Kenaikan Isa Almasih"},{"date":"2026-05-15","name":"Cuti Bersama Kenaikan Isa Almasih"},{"date":"2026-05-27","name":"Idul Adha 1447 H"},{"date":"2026-05-28","name":"Cuti Bersama Idul Adha 1447 H"},{"date":"2026-05-31","name":"Hari Raya Waisak 2570 BE"},{"date":"2026-06-01","name":"Hari Lahir Pancasila"},{"date":"2026-08-17","name":"HUT Kemerdekaan RI ke-81"},{"date":"2026-08-25","name":"Maulid Nabi Muhammad SAW 1448 H"},{"date":"2026-12-25","name":"Hari Raya Natal"}],"admin":{"hash":"1g6mb70-126me2y"},"stamp":"2026-09-10T04:39:55.880Z","belumTerbit":false};
+const SEED = {"names":["Syifa","Herry","Fiki","Adit","Dewa","Andri","Rizal","Clara","Pandu","Edu","Arry","Dwi"],"months":{"2026-07":{"year":2026,"month":7,"cells":{"Syifa":{"1":"M","8":"M","11":"P","15":"M"},"Herry":{"6":"M","16":"M","18":"P","22":"M","30":"M"},"Fiki":{"2":"M","13":"M","23":"M","31":"M"},"Adit":{"3":"M","14":"M","24":"M"},"Dewa":{"7":"M","19":"S","21":"M","28":"M"},"Andri":{"9":"M","17":"M","27":"M"},"Rizal":{"10":"M","20":"M","29":"M"},"Clara":{},"Pandu":{},"Edu":{},"Arry":{},"Dwi":{}}},"2026-08":{"year":2026,"month":8,"cells":{"Syifa":{"7":"M","13":"M","21":"M"},"Herry":{"4":"M","14":"M","23":"S","31":"M"},"Fiki":{"10":"M","16":"P","20":"M"},"Dewa":{"19":"M","24":"M"},"Adit":{"3":"M","12":"M","17":"S","27":"M"},"Andri":{"5":"M","11":"M","15":"P","26":"M"},"Rizal":{"6":"M","18":"M","22":"S","28":"M"},"Clara":{},"Pandu":{},"Edu":{},"Arry":{},"Dwi":{}}},"2026-09":{"year":2026,"month":9,"cells":{"Syifa":{"3":"M","9":"M","25":"M"},"Herry":{"18":"M","23":"M","28":"M"},"Fiki":{"4":"M","10":"M","21":"M"},"Dewa":{"14":"M","24":"M","30":"M"},"Adit":{"2":"M","11":"M","17":"M"},"Andri":{"7":"M","15":"M","29":"M"},"Rizal":{"1":"M","8":"M","16":"M","22":"M"},"Clara":{"1":"M","8":"M","15":"M","22":"M","29":"M"},"Pandu":{"2":"M","9":"M","16":"M","23":"M","30":"M"},"Edu":{"3":"M","10":"M","17":"M","24":"M"},"Arry":{"4":"M","11":"M","18":"M","25":"M"},"Dwi":{"7":"M","14":"M","21":"M","28":"M"}}}},"holidays":[{"date":"2026-01-01","name":"Tahun Baru Masehi 2026"},{"date":"2026-02-17","name":"Tahun Baru Imlek 2577 Kongzili"},{"date":"2026-03-19","name":"Hari Suci Nyepi (Tahun Baru Saka 1948)"},{"date":"2026-03-21","name":"Idul Fitri 1447 H (hari pertama)"},{"date":"2026-03-22","name":"Idul Fitri 1447 H (hari kedua)"},{"date":"2026-04-03","name":"Wafat Isa Almasih"},{"date":"2026-05-01","name":"Hari Buruh Internasional"},{"date":"2026-05-14","name":"Kenaikan Isa Almasih"},{"date":"2026-05-15","name":"Cuti Bersama Kenaikan Isa Almasih"},{"date":"2026-05-27","name":"Idul Adha 1447 H"},{"date":"2026-05-28","name":"Cuti Bersama Idul Adha 1447 H"},{"date":"2026-05-31","name":"Hari Raya Waisak 2570 BE"},{"date":"2026-06-01","name":"Hari Lahir Pancasila"},{"date":"2026-08-17","name":"HUT Kemerdekaan RI ke-81"},{"date":"2026-08-25","name":"Maulid Nabi Muhammad SAW 1448 H"},{"date":"2026-12-25","name":"Hari Raya Natal"}],"admin":{"hash":"1g6mb70-126me2y"},"stamp":"2026-09-10T13:48:07+07:00","belumTerbit":false,"teams":[{"nama":"Tim SRR & CDR","anggota":["Syifa","Herry","Fiki","Adit","Dewa","Andri","Rizal"]},{"nama":"Tim DDR","anggota":["Clara","Pandu","Edu","Arry","Dwi"]}],"ghRepo":{"repo":"dewa9090/Jadwal-Piket-Pagi","branch":"main","path":"index.html","otomatis":true}};
 
 const MK = {
   M:{label:"Masuk Pagi", glyph:"✓"},
@@ -394,6 +423,7 @@ function load(){
     if(raw){
       const d = JSON.parse(raw);
       if(d && d.months && d.names){
+        pastikanTim(d);
         // Berkas yang lebih baru biasanya menang, supaya terbitan baru dari admin
         // selalu terlihat. Tetapi bila salinan di browser ini masih memuat suntingan
         // yang belum diterbitkan, suntingan itu yang dipertahankan - jangan sampai
@@ -408,7 +438,7 @@ function load(){
       }
     }
   }catch(e){}
-  return JSON.parse(JSON.stringify(SEED));
+  return pastikanTim(JSON.parse(JSON.stringify(SEED)));
 }
 // Perubahan ditahan sebagai draf sampai tombol Simpan ditekan.
 let draf = false;
@@ -481,7 +511,9 @@ const daysIn = (y,m) => new Date(y, m, 0).getDate();
 const iso = (y,m,d) => y+"-"+pad(m)+"-"+pad(d);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const monthKeys = () => Object.keys(state.months).sort();
-const visibleKeys = () => monthKeys().filter(k =>
+// bulan bertanda sembunyi hanya tampak bagi admin, supaya bisa dikelola
+const keysTerbuka = () => monthKeys().filter(k => isAdmin || !state.months[k].sembunyi);
+const visibleKeys = () => keysTerbuka().filter(k =>
   (!filterYear || k.slice(0,4) === filterYear) &&
   (!filterMonth || k.slice(5,7) === filterMonth));
 
@@ -596,6 +628,25 @@ function holidayMap(){
 }
 
 /* ---------- tampilan ---------- */
+/* ---------- tim ----------
+   Jadwal dibagi per tim. Tiap tim punya tabel dan rotasi piketnya sendiri,
+   sehingga satu hari kerja bisa diisi satu pegawai dari masing-masing tim.
+   state.names tetap ada sebagai gabungan semua anggota, dipakai oleh bagian
+   lain yang bekerja per nama (sel jadwal, rekap, tukar).                    */
+function pastikanTim(d){
+  if(!Array.isArray(d.teams) || !d.teams.length)
+    d.teams = [{nama: "Tim SRR & CDR", anggota: (d.names || []).slice()}];
+  d.teams.forEach(t => { if(!Array.isArray(t.anggota)) t.anggota = []; });
+  d.names = d.teams.reduce((a, t) => a.concat(t.anggota), []);
+  return d;
+}
+function segarkanNama(){
+  state.names = state.teams.reduce((a, t) => a.concat(t.anggota), []);
+}
+function timDari(nama){
+  return state.teams.find(t => t.anggota.indexOf(nama) >= 0) || null;
+}
+
 function render(){
   const app = document.getElementById("app");
   const hol = holidayMap();
@@ -622,57 +673,20 @@ function render(){
     }
     const libur = days.filter(x => x.hol);
 
-    html += '<section class="month" data-k="'+key+'">';
+    html += '<section class="month'+(mo.sembunyi ? " redup" : "")+'" data-k="'+key+'">';
     html += '<div class="mhead"><h2>'+BULAN[mo.month-1]+" "+mo.year+"</h2>";
     html += '<span class="chip">'+days.filter(x=>!x.we&&!x.hol).length+" hari kerja</span>";
     if(libur.length) html += '<span class="chip">'+libur.length+" hari libur nasional</span>";
+    if(mo.sembunyi) html += '<span class="chip sembunyi">tidak tampil untuk tim</span>';
     html += '<div class="spacer"></div>';
+    html += '<button class="sm adminOnly" data-act="sembunyi">' +
+            (mo.sembunyi ? "Tampilkan" : "Sembunyikan") + "</button>";
     html += '<button class="sm adminOnly" data-act="auto">Isi Otomatis</button>';
     html += '<button class="sm adminOnly" data-act="clear">Kosongkan</button>';
     html += '<button class="sm danger adminOnly" data-act="del">Hapus Bulan</button>';
-    html += '</div><div class="mbody"><table><thead><tr>';
-    html += '<th class="nm">Nama \\ Tgl</th>';
-    for(const x of days){
-      const cls = ["d", x.we?"we":"", x.hol?"hd":"", x.now?"now":""].join(" ");
-      const tip = x.hol ? ' title="'+esc(x.hol.name + (x.hol.est ? " (perkiraan)" : ""))+'"' : "";
-      html += '<th class="'+cls+'"'+tip+">"+x.d+'<span class="dw">'+HARI[x.dow]+"</span></th>";
-    }
-    if(isAdmin) html += '<th class="tot">Total</th>';
-    html += "</tr></thead><tbody>";
+    html += "</div>";
 
-    for(const name of state.names){
-      const row = (mo.cells[name] = mo.cells[name] || {});
-      let tot = 0;
-      html += '<tr><td class="nm">'+esc(name)+"</td>";
-      for(const x of days){
-        const mk = row[x.d] || "";
-        if(mk === "M" || mk === "P") tot++;
-        const cls = ["d", x.we?"we":"", x.hol?"hd":"", mk?("mk-"+mk):""].join(" ");
-        const tip = mk ? MK[mk].label+" – "+x.d+" "+BULAN[mo.month-1]
-                       : (x.hol ? x.hol.name : "");
-        html += '<td class="'+cls+'" data-n="'+esc(name)+'" data-d="'+x.d+'"'+
-                (tip ? ' title="'+esc(tip)+'"' : "")+">"+(mk?MK[mk].glyph:"")+"</td>";
-      }
-      if(isAdmin) html += '<td class="tot">'+tot+"</td>";
-      html += "</tr>";
-    }
-
-    if(isAdmin){
-      html += '<tr class="sum"><td class="nm">Jumlah</td>';
-      let grand = 0;
-      for(const x of days){
-        let c = 0;
-        for(const name of state.names){
-          const mk = (mo.cells[name]||{})[x.d];
-          if(mk === "M" || mk === "P") c++;
-        }
-        grand += c;
-        const warn = (!x.we && !x.hol && c === 0) ? " warn" : "";
-        html += '<td class="'+(x.we?"we":"")+(x.hol?" hd":"")+warn+'">'+(c||"")+"</td>";
-      }
-      html += '<td class="tot">'+grand+"</td></tr>";
-    }
-    html += "</tbody></table></div>";
+    state.teams.forEach((tim, i) => { html += tabelTim(mo, days, tim, i); });
 
     if(libur.length){
       html += '<div class="holbar">';
@@ -682,22 +696,88 @@ function render(){
       html += "</div>";
     }
 
-    html += '<div class="legend">';
-    for(const k of LEGENDA){
-      const v = k.toLowerCase();
-      html += '<span><i class="sw" style="background:var(--'+v+'-bg);border-color:var(--'+v+
-              ')"></i>'+MK[k].label+"</span>";
-    }
-    html += '<span><i class="sw" style="background:var(--weekend)"></i>Akhir Pekan</span>';
-    html += '<span><i class="sw" style="background:var(--holiday)"></i>Libur Nasional</span>';
-    if(isAdmin) html += "<span>Klik sel untuk memberi tanda · klik kanan untuk menghapus</span>";
-    html += "</div></section>";
+    if(isAdmin)
+      html += '<div class="legend petunjuk">' +
+              "<span>Klik sel untuk memberi tanda · klik kanan untuk menghapus</span></div>";
+    html += "</section>";
   }
   app.innerHTML = html;
 }
 
+function tabelTim(mo, days, tim, urutan){
+  let html = '<div class="tim" data-t="'+urutan+'">';
+  html += '<div class="timhead"><b>'+esc(tim.nama)+"</b>";
+  html += '<span class="chip">'+tim.anggota.length+" pegawai</span></div>";
+
+  if(!tim.anggota.length){
+    html += '<div class="timkosong">Belum ada pegawai di tim ini. ' +
+            'Tambahkan lewat tombol <b>Pegawai</b>.</div></div>';
+    return html;
+  }
+
+  html += '<div class="mbody"><table><thead><tr>';
+  html += '<th class="nm">Nama \\ Tgl</th>';
+  for(const x of days){
+    const cls = ["d", x.we?"we":"", x.hol?"hd":"", x.now?"now":""].join(" ");
+    const tip = x.hol ? ' title="'+esc(x.hol.name + (x.hol.est ? " (perkiraan)" : ""))+'"' : "";
+    html += '<th class="'+cls+'"'+tip+">"+x.d+'<span class="dw">'+HARI[x.dow]+"</span></th>";
+  }
+  if(isAdmin) html += '<th class="tot">Total</th>';
+  html += "</tr></thead><tbody>";
+
+  for(const name of tim.anggota){
+    const row = (mo.cells[name] = mo.cells[name] || {});
+    let tot = 0;
+    html += '<tr><td class="nm">'+esc(name)+"</td>";
+    for(const x of days){
+      const mk = row[x.d] || "";
+      if(mk === "M" || mk === "P") tot++;
+      const cls = ["d", x.we?"we":"", x.hol?"hd":"", mk?("mk-"+mk):""].join(" ");
+      const tip = mk ? MK[mk].label+" – "+x.d+" "+BULAN[mo.month-1]
+                     : (x.hol ? x.hol.name : "");
+      html += '<td class="'+cls+'" data-n="'+esc(name)+'" data-d="'+x.d+'"'+
+              (tip ? ' title="'+esc(tip)+'"' : "")+">"+(mk?MK[mk].glyph:"")+"</td>";
+    }
+    if(isAdmin) html += '<td class="tot">'+tot+"</td>";
+    html += "</tr>";
+  }
+
+  if(isAdmin){
+    html += '<tr class="sum"><td class="nm">Jumlah</td>';
+    let grand = 0;
+    for(const x of days){
+      let c = 0;
+      for(const name of tim.anggota){
+        const mk = (mo.cells[name]||{})[x.d];
+        if(mk === "M" || mk === "P") c++;
+      }
+      grand += c;
+      const warn = (!x.we && !x.hol && c === 0) ? " warn" : "";
+      html += '<td class="'+(x.we?"we":"")+(x.hol?" hd":"")+warn+'">'+(c||"")+"</td>";
+    }
+    html += '<td class="tot">'+grand+"</td></tr>";
+  }
+  html += "</tbody></table></div>";
+  html += legendaHtml();
+  html += "</div>";
+  return html;
+}
+
+// keterangan warna, ditempatkan di bawah tabel setiap tim
+function legendaHtml(){
+  let html = '<div class="legend">';
+  for(const k of LEGENDA){
+    const v = k.toLowerCase();
+    html += '<span><i class="sw" style="background:var(--'+v+'-bg);border-color:var(--'+v+
+            ')"></i>'+MK[k].label+"</span>";
+  }
+  html += '<span><i class="sw" style="background:var(--weekend)"></i>Akhir Pekan</span>';
+  html += '<span><i class="sw" style="background:var(--holiday)"></i>Libur Nasional</span>';
+  return html + "</div>";
+}
+
 function buildFilters(){
-  const keys = monthKeys();
+  const keys = keysTerbuka();
   const years = [...new Set(keys.map(k => k.slice(0,4)))].sort().reverse();
   if(filterYear && !years.includes(filterYear)) filterYear = "";
   document.getElementById("fYear").innerHTML =
@@ -724,14 +804,25 @@ document.getElementById("app").addEventListener("click", e => {
     const key = btn.closest(".month").dataset.k;
     const mo = state.months[key];
     const act = btn.dataset.act;
-    if(act === "del"){
+    if(act === "sembunyi"){
+      mo.sembunyi = !mo.sembunyi;
+      tandai(); buildFilters(); render();
+      toast(BULAN[mo.month-1]+" "+mo.year+(mo.sembunyi
+        ? " disembunyikan dari tim" : " ditampilkan kembali"));
+    }else if(act === "del"){
       if(!confirm("Hapus bulan "+BULAN[mo.month-1]+" "+mo.year+"?")) return;
       delete state.months[key]; tandai(); buildFilters(); render(); toast("Bulan dihapus");
     }else if(act === "clear"){
       if(!confirm("Kosongkan semua tanda di bulan ini?")) return;
       mo.cells = {}; tandai(); render(); toast("Bulan dikosongkan");
     }else if(act === "auto"){
-      autoFill(key); tandai(); render(); toast("Jadwal terisi otomatis");
+      autoKey = key;
+      document.getElementById("autoBulan").textContent =
+        BULAN[mo.month-1] + " " + mo.year;
+      document.getElementById("autoTim").innerHTML =
+        '<option value="">Semua tim</option>' +
+        state.teams.map((t,i) => '<option value="'+i+'">'+esc(t.nama)+"</option>").join("");
+      dlgAuto.showModal();
     }
     return;
   }
@@ -772,7 +863,8 @@ document.getElementById("app").addEventListener("contextmenu", e => {
 });
 
 /* ---------- pengisian otomatis ---------- */
-function autoFill(key, blokir){
+// pilihTim: nomor urut tim, atau null untuk semua tim
+function autoFill(key, blokir, pilihTim){
   const mo = state.months[key];
   const hol = holidayMap();
   const work = [];
@@ -782,12 +874,14 @@ function autoFill(key, blokir){
     if(hol[iso(mo.year, mo.month, d)]) continue;
     work.push(d);
   }
-  mo.cells = {};
-  state.names.forEach(n => mo.cells[n] = {});
-  if(!state.names.length) return;
-
-  // tandai lebih dulu hari-hari petugas yang tidak tersedia
+  const timDiisi = (pilihTim === null || pilihTim === undefined)
+    ? state.teams : [state.teams[pilihTim]];
+  // hanya anggota tim yang dipilih yang dikosongkan; tim lain dibiarkan utuh
+  for(const tim of timDiisi)
+    for(const nm of tim.anggota) mo.cells[nm] = {};
   blokir = blokir || {};
+
+  // tandai lebih dulu hari-hari pegawai yang tidak tersedia
   const halangan = {};
   for(const n in blokir){
     if(!mo.cells[n]) continue;
@@ -795,30 +889,34 @@ function autoFill(key, blokir){
     for(const d of blokir[n]) mo.cells[n][d] = "L";
   }
 
-  let start = 0;
+  // tiap tim berotasi sendiri, jadi satu hari kerja dapat satu pegawai per tim
   const prev = monthKeys().filter(k => k < key).pop();
-  if(prev){
-    const p = state.months[prev];
-    let lastName = null, lastDay = -1;
-    for(const n of state.names)
-      for(const d in (p.cells[n]||{}))
-        if(p.cells[n][d] === "M" && +d > lastDay){ lastDay = +d; lastName = n; }
-    if(lastName) start = (state.names.indexOf(lastName) + 1) % state.names.length;
-  }
+  for(const tim of timDiisi){
+    const daftar = tim.anggota;
+    if(!daftar.length) continue;
 
-  // rotasi berurutan; petugas yang terhalang hari itu dilompati, giliran
-  // berikutnya tetap diambil dari urutan supaya pembagian tetap merata
-  let i = 0;
-  for(const d of work){
-    let pilih = null;
-    for(let k = 0; k < state.names.length; k++){
-      const kand = state.names[(start + i + k) % state.names.length];
-      if(halangan[kand] && halangan[kand].indexOf(d) >= 0) continue;
-      pilih = kand; i += k; break;
+    let start = 0;
+    if(prev){
+      const p = state.months[prev];
+      let lastName = null, lastDay = -1;
+      for(const n of daftar)
+        for(const d in (p.cells[n]||{}))
+          if(p.cells[n][d] === "M" && +d > lastDay){ lastDay = +d; lastName = n; }
+      if(lastName) start = (daftar.indexOf(lastName) + 1) % daftar.length;
     }
-    if(pilih === null) continue;   // semua petugas terhalang pada hari ini
-    mo.cells[pilih][d] = "M";
-    i++;
+
+    let i = 0;
+    for(const d of work){
+      let pilih = null;
+      for(let k = 0; k < daftar.length; k++){
+        const kand = daftar[(start + i + k) % daftar.length];
+        if(halangan[kand] && halangan[kand].indexOf(d) >= 0) continue;
+        pilih = kand; i += k; break;
+      }
+      if(pilih === null) continue;   // seluruh anggota tim ini terhalang pada hari itu
+      mo.cells[pilih][d] = "M";
+      i++;
+    }
   }
 }
 
@@ -901,48 +999,143 @@ dlgAdd.addEventListener("close", () => {
   if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
 });
 
-/* ---------- petugas ---------- */
+/* ---------- pegawai ---------- */
+const dlgAuto = document.getElementById("dlgAuto");
+let autoKey = null;
+dlgAuto.addEventListener("close", () => {
+  if(dlgAuto.returnValue !== "ok" || !autoKey || !isAdmin) return;
+  const v = document.getElementById("autoTim").value;
+  const pilih = v === "" ? null : +v;
+  const mo = state.months[autoKey];
+  autoFill(autoKey, null, pilih);
+  tandai(); render();
+  toast((pilih === null ? "Semua tim" : state.teams[pilih].nama) + " di " +
+        BULAN[mo.month-1] + " " + mo.year + " terisi otomatis");
+  autoKey = null;
+});
+
 const dlgNames = document.getElementById("dlgNames");
 function renderNames(){
-  document.getElementById("nameList").innerHTML = state.names.map((n,i) =>
-    '<div class="row"><input type="text" value="'+esc(n)+'" data-i="'+i+'">'+
-    '<button class="sm" data-up="'+i+'" title="Naikkan">↑</button>'+
-    '<button class="sm" data-down="'+i+'" title="Turunkan">↓</button>'+
-    '<button class="sm danger" data-del="'+i+'">Hapus</button></div>').join("")
-    || '<div class="hint" style="margin:0">Belum ada petugas.</div>';
+  let html = "";
+  state.teams.forEach((tim, ti) => {
+    html += '<div class="yrhead" style="gap:6px">' +
+            '<input type="text" value="'+esc(tim.nama)+'" data-timnama="'+ti+'" ' +
+            'style="flex:1;font-weight:650">' +
+            '<button class="sm" data-timup="'+ti+'" title="Naikkan tim">↑</button>' +
+            '<button class="sm" data-timdown="'+ti+'" title="Turunkan tim">↓</button>' +
+            '<button class="sm danger" data-timdel="'+ti+'">Hapus Tim</button></div>';
+
+    tim.anggota.forEach((n, i) => {
+      html += '<div class="row" style="padding-left:14px">' +
+              '<input type="text" value="'+esc(n)+'" data-tim="'+ti+'" data-i="'+i+'">' +
+              '<button class="sm" data-tim="'+ti+'" data-up="'+i+'" title="Naikkan">↑</button>' +
+              '<button class="sm" data-tim="'+ti+'" data-down="'+i+'" title="Turunkan">↓</button>' +
+              '<button class="sm danger" data-tim="'+ti+'" data-del="'+i+'">Hapus</button></div>';
+    });
+
+    if(!tim.anggota.length)
+      html += '<div class="hint" style="margin:0 0 8px 14px">Belum ada pegawai.</div>';
+    html += '<div class="row" style="padding-left:14px">' +
+            '<button class="sm" data-timadd="'+ti+'">+ Tambah Pegawai ke ' +
+            esc(tim.nama) + "</button></div>";
+  });
+  document.getElementById("nameList").innerHTML = html;
 }
-document.getElementById("bNames").onclick = () => { renderNames(); dlgNames.showModal(); };
-document.getElementById("nAdd").onclick = () => {
-  state.names.push("Petugas "+(state.names.length+1)); tandai(); renderNames(); render();
-};
-document.getElementById("nClose").onclick = () => dlgNames.close();
-document.getElementById("nameList").addEventListener("change", e => {
-  const inp = e.target.closest("input[data-i]");
-  if(!inp) return;
-  const i = +inp.dataset.i, old = state.names[i], neu = inp.value.trim();
-  if(!neu || neu === old){ inp.value = old; return; }
-  state.names[i] = neu;
+
+// ganti nama pegawai di seluruh bulan agar tandanya ikut berpindah
+function gantiNama(lama, baru){
   for(const k in state.months){
     const c = state.months[k].cells;
-    if(c[old]){ c[neu] = c[old]; delete c[old]; }
+    if(c[lama]){ c[baru] = c[lama]; delete c[lama]; }
   }
-  tandai(); render();
+}
+function namaUnik(dasar){
+  let n = dasar, i = 2;
+  while(state.names.indexOf(n) >= 0) n = dasar + " " + (i++);
+  return n;
+}
+
+document.getElementById("bNames").onclick = () => { renderNames(); dlgNames.showModal(); };
+document.getElementById("nAdd").onclick = () => {
+  state.teams.push({nama: namaTimUnik("Tim Baru"), anggota: []});
+  segarkanNama(); tandai(); renderNames(); render();
+};
+function namaTimUnik(dasar){
+  let n = dasar, i = 2;
+  while(state.teams.some(t => t.nama === n)) n = dasar + " " + (i++);
+  return n;
+}
+document.getElementById("nClose").onclick = () => dlgNames.close();
+
+document.getElementById("nameList").addEventListener("change", e => {
+  const inp = e.target.closest("input"); if(!inp) return;
+
+  if(inp.dataset.timnama !== undefined){
+    const t = state.teams[+inp.dataset.timnama];
+    const baru = inp.value.trim();
+    if(!baru){ inp.value = t.nama; return; }
+    t.nama = baru;
+    tandai(); renderNames(); render();
+    return;
+  }
+
+  const ti = +inp.dataset.tim, i = +inp.dataset.i;
+  if(isNaN(ti) || isNaN(i)) return;
+  const tim = state.teams[ti];
+  const lama = tim.anggota[i], baru = inp.value.trim();
+  if(!baru || baru === lama){ inp.value = lama; return; }
+  if(state.names.indexOf(baru) >= 0){
+    toast("Nama " + baru + " sudah dipakai");
+    inp.value = lama; return;
+  }
+  tim.anggota[i] = baru;
+  gantiNama(lama, baru);
+  segarkanNama(); tandai(); render();
 });
+
 document.getElementById("nameList").addEventListener("click", e => {
   const b = e.target.closest("button"); if(!b) return;
-  const swap = (i,j) => {
-    if(j < 0 || j >= state.names.length) return;
-    const t = state.names[i]; state.names[i] = state.names[j]; state.names[j] = t;
-  };
-  if(b.dataset.del !== undefined){
-    const i = +b.dataset.del, n = state.names[i];
-    if(!confirm("Hapus "+n+" beserta semua tandanya?")) return;
-    state.names.splice(i,1);
-    for(const k in state.months) delete state.months[k].cells[n];
+  const d = b.dataset;
+
+  if(d.timadd !== undefined){
+    const tim = state.teams[+d.timadd];
+    tim.anggota.push(namaUnik("Pegawai"));
+    segarkanNama();
   }
-  else if(b.dataset.up !== undefined) swap(+b.dataset.up, +b.dataset.up - 1);
-  else if(b.dataset.down !== undefined) swap(+b.dataset.down, +b.dataset.down + 1);
+  else if(d.timdel !== undefined){
+    const tim = state.teams[+d.timdel];
+    if(state.teams.length === 1) return toast("Sisakan minimal satu tim");
+    if(!confirm("Hapus " + tim.nama + " beserta " + tim.anggota.length +
+                " pegawai dan semua tandanya?")) return;
+    for(const n of tim.anggota)
+      for(const k in state.months) delete state.months[k].cells[n];
+    state.teams.splice(+d.timdel, 1);
+    segarkanNama();
+  }
+  else if(d.timup !== undefined || d.timdown !== undefined){
+    const i = +(d.timup !== undefined ? d.timup : d.timdown);
+    const j = d.timup !== undefined ? i-1 : i+1;
+    if(j < 0 || j >= state.teams.length) return;
+    const t = state.teams[i]; state.teams[i] = state.teams[j]; state.teams[j] = t;
+    segarkanNama();
+  }
+  else if(d.del !== undefined){
+    const tim = state.teams[+d.tim], n = tim.anggota[+d.del];
+    if(!confirm("Hapus " + n + " beserta semua tandanya?")) return;
+    tim.anggota.splice(+d.del, 1);
+    for(const k in state.months) delete state.months[k].cells[n];
+    segarkanNama();
+  }
+  else if(d.up !== undefined || d.down !== undefined){
+    const tim = state.teams[+d.tim];
+    const i = +(d.up !== undefined ? d.up : d.down);
+    const j = d.up !== undefined ? i-1 : i+1;
+    if(j < 0 || j >= tim.anggota.length) return;
+    const t = tim.anggota[i]; tim.anggota[i] = tim.anggota[j]; tim.anggota[j] = t;
+    segarkanNama();
+  }
   else return;
+
   tandai(); renderNames(); render();
 });
 
@@ -1044,33 +1237,42 @@ function buildRows(){
   for(const key of visibleKeys()){
     const mo = state.months[key], nd = daysIn(mo.year, mo.month);
     out.push([BULAN[mo.month-1]+" "+mo.year]);
-    const head = ["Nama \\ Tgl"];
-    for(let d=1; d<=nd; d++) head.push(pad(d)+"-"+BULAN[mo.month-1].slice(0,3));
-    if(isAdmin) head.push("Total");
-    out.push(head);
-    for(const n of state.names){
-      const row = [n]; let tot = 0;
-      for(let d=1; d<=nd; d++){
-        const mk = (mo.cells[n]||{})[d] || "";
-        if(mk === "M" || mk === "P") tot++;
-        row.push(mk ? MK[mk].glyph : "");
-      }
-      if(isAdmin) row.push(tot);
-      out.push(row);
-    }
-    if(isAdmin){
-      const sum = ["Jumlah"]; let g = 0;
-      for(let d=1; d<=nd; d++){
-        let c = 0;
-        for(const n of state.names){
-          const mk = (mo.cells[n]||{})[d];
-          if(mk === "M" || mk === "P") c++;
+
+    for(const tim of state.teams){
+      if(!tim.anggota.length) continue;
+      out.push([tim.nama]);
+      const head = ["Nama \\ Tgl"];
+      for(let d=1; d<=nd; d++) head.push(pad(d)+"-"+BULAN[mo.month-1].slice(0,3));
+      if(isAdmin) head.push("Total");
+      out.push(head);
+
+      for(const n of tim.anggota){
+        const row = [n]; let tot = 0;
+        for(let d=1; d<=nd; d++){
+          const mk = (mo.cells[n]||{})[d] || "";
+          if(mk === "M" || mk === "P") tot++;
+          row.push(mk ? MK[mk].glyph : "");
         }
-        g += c; sum.push(c);
+        if(isAdmin) row.push(tot);
+        out.push(row);
       }
-      sum.push(g);
-      out.push(sum);
+
+      if(isAdmin){
+        const sum = ["Jumlah"]; let g = 0;
+        for(let d=1; d<=nd; d++){
+          let c = 0;
+          for(const n of tim.anggota){
+            const mk = (mo.cells[n]||{})[d];
+            if(mk === "M" || mk === "P") c++;
+          }
+          g += c; sum.push(c);
+        }
+        sum.push(g);
+        out.push(sum);
+      }
+      out.push([]);
     }
+
     const lib = ["Keterangan"];
     for(let d=1; d<=nd; d++){
       const dow = new Date(mo.year, mo.month-1, d).getDay();
@@ -1081,6 +1283,7 @@ function buildRows(){
   }
   return out;
 }
+
 document.getElementById("xCsv").onclick = () => {
   const csv = buildRows().map(r => r.map(v => {
     const s = String(v === undefined || v === null ? "" : v);
@@ -1165,18 +1368,20 @@ const GHKEY = "jadwalPiket.github";
 let gh = muatGh();
 
 function muatGh(){
+  // token hanya dari penyimpanan browser ini - tidak pernah ikut berkas
+  let token = "";
   try{
     const r = localStorage.getItem(GHKEY);
-    if(r){
-      const d = JSON.parse(r);
-      return {repo:d.repo||"", branch:d.branch||"main", path:d.path||"index.html",
-              token:d.token||"", otomatis: d.otomatis !== false};
-    }
+    if(r) token = JSON.parse(r).token || "";
   }catch(e){}
-  return {repo:"", branch:"main", path:"index.html", token:"", otomatis:true};
+  const p = (state && state.ghRepo) || {};
+  return {repo: p.repo || "", branch: p.branch || "main", path: p.path || "index.html",
+          otomatis: p.otomatis !== false, token: token};
 }
 function simpanGh(){
-  try{ localStorage.setItem(GHKEY, JSON.stringify(gh)); }catch(e){}
+  // bagian tanpa rahasia menempel pada jadwal, jadi ikut terbawa saat diterbitkan
+  state.ghRepo = {repo: gh.repo, branch: gh.branch, path: gh.path, otomatis: gh.otomatis};
+  try{ localStorage.setItem(GHKEY, JSON.stringify({token: gh.token})); }catch(e){}
 }
 const ghSiap = () => !!(gh.repo && gh.token);
 
@@ -1272,6 +1477,7 @@ document.getElementById("ghSimpan").onclick = () => {
   ambilFormGh();
   ghStatus(ghSiap() ? "Pengaturan disimpan untuk " + gh.repo : "Repo dan token belum lengkap",
            ghSiap() ? "ok" : "bad");
+  tandai();
   tandaTerbit();
   if(ghSiap()) toast("GitHub tersambung — klik Simpan untuk mengirim perubahan");
 };
@@ -1294,12 +1500,12 @@ document.getElementById("ghUji").onclick = async () => {
                       : "Berkas " + gh.path + " belum ada; nanti akan dibuat."), "ok");
 };
 document.getElementById("ghLupakan").onclick = () => {
-  if(!confirm("Hapus token dan pengaturan GitHub dari browser ini?")) return;
-  gh = {repo:"", branch:"main", path:"index.html", token:"", otomatis:true};
+  if(!confirm("Hapus token dari browser ini? Alamat repo tetap tersimpan.")) return;
+  gh.token = "";
   try{ localStorage.removeItem(GHKEY); }catch(e){}
   isiFormGh();
   tandaTerbit();
-  toast("Pengaturan GitHub dihapus");
+  toast("Token dihapus dari browser ini");
 };
 document.getElementById("ghKirim").onclick = async () => {
   ambilFormGh();
@@ -1346,6 +1552,7 @@ document.getElementById("bImport").onclick = () => {
         if(!confirm("Ganti seluruh data dengan isi berkas ini?")) return;
         d.holidays = d.holidays || [];
         d.admin = d.admin || state.admin;
+        pastikanTim(d);
         state = d; tandai(); buildFilters(); render(); toast("Data berhasil diimpor");
       }catch(e){ toast("Berkas tidak dikenali"); }
     };
@@ -1459,11 +1666,11 @@ function botJalan(teks){
     return {ok:true, html:html, ubah:false};
   }
 
-  /* --- tukar dua petugas --- */
+  /* --- tukar dua pegawai --- */
   if(/tukar|tuker|ganti jadwal|swap/.test(t)){
     const nama = botNama(asli);
     if(nama.length < 2)
-      return {ok:false, pesan:"Sebutkan dua nama petugas, misalnya <b>tukar Fiki dan Adit</b>."};
+      return {ok:false, pesan:"Sebutkan dua nama pegawai, misalnya <b>tukar Fiki dan Adit</b>."};
     const key = botSasaran(asli);
     if(!key) return {ok:false, pesan:"Bulan mana? Saring ke satu bulan lebih dulu, atau sebutkan bulannya."};
     if(!state.months[key]) return {ok:false, pesan:"Bulan " + esc(key) + " belum ada."};
@@ -1618,6 +1825,5 @@ let resume = false;
 try{ resume = sessionStorage.getItem(SKEY) === "1"; }catch(e){}
 setAdmin(resume);
 </script>
-
-
-</body></html>
+</body>
+</html>
