@@ -92,7 +92,7 @@ Bila sebuah browser terlanjur menyimpan jadwal lama, buka alamat berikut sekali 
 itu untuk membuang salinannya dan mengambil ulang dari versi terbitan:
 
 ```
-https://dewa9090.github.io/Jadwal-Piket-Pagi/?bersih=1
+https://jalinpembayaran-ops.github.io/Jadwal-Piket-Pagi/?bersih=1
 ```
 
 Alamat berbeda ini sekaligus melewati cache, jadi tidak perlu muat ulang paksa lagi.
@@ -123,7 +123,7 @@ Tombol **GitHub** (khusus admin) menyambungkan halaman ke repo ini, sehingga tia
 tombol **Simpan** ditekan jadwal langsung dikirim sebagai commit baru — tanpa ekspor,
 salin berkas, atau push manual.
 
-Isi nama repo (`dewa9090/Jadwal-Piket-Pagi`), cabang, berkas tujuan, dan sebuah
+Isi nama repo (`JalinPembayaran-ops/Jadwal-Piket-Pagi`), cabang, berkas tujuan, dan sebuah
 **fine-grained personal access token** yang dibatasi pada repo ini saja dengan izin
 **Contents: Read and write**. Tekan **Uji Sambungan** untuk memastikan token diterima dan
 punya izin tulis, lalu **Simpan Pengaturan**.
@@ -170,7 +170,7 @@ karena membuka berkas versi lain.
 Repo ini terbit lewat GitHub Pages di:
 
 ```
-https://dewa9090.github.io/Jadwal-Piket-Pagi/
+https://jalinpembayaran-ops.github.io/Jadwal-Piket-Pagi/
 ```
 
 Halaman memasang `<meta name="robots" content="noindex, nofollow">`, jadi tautannya bisa
