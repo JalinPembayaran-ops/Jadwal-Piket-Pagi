@@ -7,164 +7,269 @@
 <style>
   :root{
     color-scheme: light;
-    --bg:#f4f6fa; --card:#ffffff; --ink:#1a2233; --muted:#6b7688; --line:#e2e7f0;
-    --accent:#1f6feb;
-    --weekend:#fdf1f1; --weekend-ink:#c0392b;
-    --holiday:#fff4e0; --holiday-ink:#b26a00;
-    --m:#1e8e5a; --m-bg:#e3f6ec;
-    --p:#9333ea; --p-bg:#f3e8ff;
-    --s:#c2410c; --s-bg:#ffedd5;
-    --l:#64748b; --l-bg:#eef2f7;
-    --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.06);
+    --bg:#f1f5f9; --card:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
+    --line-kuat:#cbd5e1;
+    --accent:#4f46e5; --accent-lembut:#eef2ff;
+    --weekend:#fef2f2; --weekend-ink:#e11d48;
+    --holiday:#fffbeb; --holiday-ink:#b45309;
+    --m:#059669; --m-bg:#ecfdf5;
+    --p:#7c3aed; --p-bg:#f5f3ff;
+    --s:#ea580c; --s-bg:#fff7ed;
+    --l:#64748b; --l-bg:#f1f5f9;
+    --r:10px; --r-besar:16px;
+    --shadow:0 1px 2px rgba(15,23,42,.04), 0 1px 3px rgba(15,23,42,.06);
+    --shadow-naik:0 4px 6px -1px rgba(15,23,42,.07), 0 10px 20px -5px rgba(15,23,42,.08);
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
-    font:14px/1.5 "Segoe UI",Inter,system-ui,-apple-system,sans-serif;
-    -webkit-font-smoothing:antialiased}
-  header{position:sticky;top:0;z-index:40;background:var(--card);border-bottom:1px solid var(--line);
-    padding:12px 20px;box-shadow:0 1px 3px rgba(16,24,40,.05)}
-  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;max-width:1680px;margin:0 auto}
-  .brand{height:44px;width:auto;flex:none;display:block}
-  .vline{width:1px;height:34px;background:var(--line);flex:none;margin:0 2px}
-  h1{font-size:17px;margin:0;font-weight:650;letter-spacing:-.01em;white-space:nowrap}
+    font:14px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Inter,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ---------- kop ---------- */
+  header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.88);
+    backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    max-width:1680px;margin:0 auto;padding:11px 20px}
+  .bar2{display:flex;flex-wrap:wrap;gap:7px;align-items:center;
+    max-width:1680px;margin:0 auto;padding:9px 20px 10px;border-top:1px solid var(--line)}
+  .bar2 button{padding:6px 10px;font-size:12.5px}
+  .bar2 .grup + .grup{padding-left:7px;margin-left:0}
+  .brand{height:38px;width:auto;flex:none;display:block}
+  .vline{width:1px;height:26px;background:var(--line-kuat);flex:none;margin:0 3px}
+  h1{font-size:16px;margin:0;font-weight:640;letter-spacing:-.015em;white-space:nowrap}
   .spacer{flex:1}
+  .grup{display:flex;gap:6px;align-items:center}
+  .grup + .grup{padding-left:8px;margin-left:2px;border-left:1px solid var(--line)}
+
+  /* ---------- kontrol ---------- */
   button,select,input{font:inherit;color:var(--ink);background:var(--card);
-    border:1px solid var(--line);border-radius:8px;padding:6px 11px;transition:.12s}
-  button{cursor:pointer}
-  button:hover{border-color:var(--accent);color:var(--accent)}
-  button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-  button.primary:hover{filter:brightness(1.08);color:#fff}
-  button.sm{padding:4px 9px;font-size:12px}
-  button.danger:hover{border-color:#dc2626;color:#dc2626}
-  select{cursor:pointer}
-  .pen{display:flex;gap:4px;align-items:center;background:var(--bg);padding:4px;
-    border-radius:10px;border:1px solid var(--line)}
-  .pen b{font-size:10.5px;color:var(--muted);font-weight:600;padding:0 6px;
-    text-transform:uppercase;letter-spacing:.05em}
-  .pen button{border:1px solid transparent;background:transparent;padding:5px 10px;
-    border-radius:7px;font-size:12.5px;font-weight:600}
-  .pen button[data-on="1"]{background:var(--card);border-color:var(--line);box-shadow:var(--shadow)}
-  .pen button .dot{display:inline-block;width:9px;height:9px;border-radius:3px;
-    margin-right:6px;vertical-align:0px}
-  .badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;
-    padding:4px 10px;border-radius:20px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
-  .badge.on{background:#e8f5ee;border-color:#9cd6b6;color:#1e7a4f}
-  .badge.warn{background:var(--holiday);border-color:#f0d6a8;color:var(--holiday-ink)}
-  .badge.warn::before{content:"";width:7px;height:7px;border-radius:50%;
-    background:var(--holiday-ink);flex:none}
-  #bSave[data-perlu="1"]{background:var(--m);border-color:var(--m);color:#fff;font-weight:600}
-  #bSave[data-perlu="1"]:hover{filter:brightness(1.08);color:#fff}
-  /* mode tampil: sembunyikan semua kontrol edit */
+    border:1px solid var(--line-kuat);border-radius:var(--r);padding:7px 12px;
+    transition:background .14s,border-color .14s,color .14s,box-shadow .14s}
+  button{cursor:pointer;font-weight:500;white-space:nowrap}
+  button:hover{background:var(--accent-lembut);border-color:#a5b4fc;color:var(--accent)}
+  button:focus-visible,select:focus-visible,input:focus-visible{
+    outline:2px solid var(--accent);outline-offset:1px}
+  button.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:550;
+    box-shadow:0 1px 2px rgba(79,70,229,.3)}
+  button.primary:hover{background:#4338ca;border-color:#4338ca;color:#fff}
+  button.sm{padding:5px 10px;font-size:12.5px}
+  button.danger:hover{background:#fef2f2;border-color:#fca5a5;color:#dc2626}
+  select{cursor:pointer;padding-right:28px;
+    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%2364748b' stroke-width='1.6' stroke-linecap='round' d='M3 4.5 6 7.5 9 4.5'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 9px center;appearance:none}
+
+  /* ---------- palet tanda ---------- */
+  .pen{display:flex;gap:2px;align-items:center;background:var(--bg);padding:3px;
+    border-radius:12px;border:1px solid var(--line)}
+  .pen b{font-size:10px;color:var(--muted);font-weight:650;padding:0 8px;
+    text-transform:uppercase;letter-spacing:.07em}
+  .pen button{border:1px solid transparent;background:transparent;padding:5px 9px;
+    border-radius:9px;font-size:12px;font-weight:550;color:var(--muted)}
+  .pen button:hover{background:rgba(255,255,255,.7);color:var(--ink)}
+  .pen button[data-on="1"]{background:var(--card);border-color:var(--line-kuat);
+    color:var(--ink);box-shadow:var(--shadow)}
+  .pen button .dot{display:inline-block;width:8px;height:8px;border-radius:50%;
+    margin-right:7px;vertical-align:0px}
+
+  /* ---------- menu tarik-turun ---------- */
+  .menu{position:relative}
+  .menu summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+    padding:6px 10px;font-size:12.5px;font-weight:500;border:1px solid var(--line-kuat);
+    border-radius:var(--r);background:var(--card);transition:background .14s,border-color .14s,color .14s}
+  .menu summary::-webkit-details-marker{display:none}
+  .menu summary::after{content:"";width:0;height:0;border-left:4px solid transparent;
+    border-right:4px solid transparent;border-top:5px solid currentColor;opacity:.55}
+  .menu summary:hover,.menu[open] summary{background:var(--accent-lembut);
+    border-color:#a5b4fc;color:var(--accent)}
+  .menuPop{position:absolute;right:0;top:calc(100% + 6px);z-index:60;display:flex;
+    flex-direction:column;gap:2px;padding:6px;background:var(--card);
+    border:1px solid var(--line-kuat);border-radius:12px;box-shadow:var(--shadow-naik);
+    min-width:184px}
+  .menuPop button{width:100%;text-align:left;border-color:transparent;background:transparent;
+    padding:8px 11px}
+  .menuPop button:hover{background:var(--accent-lembut)}
+
+  /* ---------- penanda ---------- */
+  .badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:550;
+    padding:5px 11px;border-radius:999px;border:1px solid var(--line-kuat);
+    background:var(--card);color:var(--muted)}
+  .badge.on{background:#ecfdf5;border-color:#6ee7b7;color:#047857}
+  .badge.warn{background:var(--holiday);border-color:#fcd34d;color:var(--holiday-ink)}
+  .badge.warn::before{content:"";width:6px;height:6px;border-radius:50%;
+    background:currentColor;flex:none}
+  #bSave[data-perlu="1"]{background:var(--m);border-color:var(--m);color:#fff;font-weight:600;
+    box-shadow:0 1px 2px rgba(5,150,105,.3)}
+  #bSave[data-perlu="1"]:hover{background:#047857;border-color:#047857;color:#fff}
+
   body:not([data-admin]) .adminOnly{display:none!important}
+  body:not([data-admin]) .bar2{display:none}
   body:not([data-admin]) td.d{cursor:default}
   body:not([data-admin]) td.d:hover{outline:none}
-  main{max-width:1680px;margin:0 auto;padding:20px}
-  .month{background:var(--card);border:1px solid var(--line);border-radius:14px;
+
+  /* ---------- kartu bulan ---------- */
+  main{max-width:1680px;margin:0 auto;padding:22px 20px 40px}
+  .month{background:var(--card);border:1px solid var(--line);border-radius:var(--r-besar);
     box-shadow:var(--shadow);overflow:hidden;
-    width:100%;max-width:1120px;margin:0 auto 18px}
-  .mhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 16px;
-    border-bottom:1px solid var(--line)}
-  .mhead h2{margin:0 6px 0 0;font-size:15.5px;font-weight:650}
-  .chip{font-size:11.5px;color:var(--muted);background:var(--bg);border:1px solid var(--line);
-    border-radius:20px;padding:2px 9px}
-  .mbody{overflow-x:auto}
-  .tim + .tim{border-top:1px solid var(--line)}
-  .timhead{display:flex;align-items:center;gap:9px;padding:9px 16px;background:var(--bg);
-    border-bottom:1px solid var(--line);font-size:13px}
-  .timhead b{font-weight:650;letter-spacing:-.01em}
-  .timkosong{padding:14px 16px;font-size:12.5px;color:var(--muted)}
-  .month.redup{border-style:dashed;background:var(--bg)}
-  .month.redup .mbody,.month.redup .holbar,.month.redup .legend{opacity:.55}
-  .legend.petunjuk{color:var(--muted);font-style:normal}
-  .logrow{display:flex;gap:12px;align-items:baseline;padding:5px 2px;font-size:12.5px;
-    border-bottom:1px solid var(--line)}
-  .logrow:last-child{border-bottom:0}
-  .logjam{flex:none;width:42px;color:var(--muted);font-variant-numeric:tabular-nums}
-  .dh .chip{font-weight:500;margin-left:8px;vertical-align:2px}
-  .chip.sembunyi{background:var(--holiday);border-color:#f0d6a8;color:var(--holiday-ink);
+    width:100%;max-width:1120px;margin:0 auto 20px}
+  .mhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:14px 18px}
+  .mhead h2{margin:0 4px 0 0;font-size:16px;font-weight:650;letter-spacing:-.015em}
+  .chip{font-size:11.5px;color:var(--muted);background:var(--bg);
+    border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-weight:500}
+  .chip.sembunyi{background:var(--holiday);border-color:#fcd34d;color:var(--holiday-ink);
     font-weight:600}
-  /* kolom nama dan total dipatok; kolom tanggal membagi sisa secara merata,
-     jadi setiap bulan sama lebar berapa pun jumlah harinya */
+  .month.redup{border-style:dashed;background:#fafbfc}
+  .month.redup .mbody,.month.redup .holbar,.month.redup .legend{opacity:.5}
+
+  /* ---------- blok tim ---------- */
+  .tim{border-top:1px solid var(--line)}
+  .timhead{display:flex;align-items:center;gap:9px;padding:10px 18px;
+    background:linear-gradient(var(--bg),var(--bg));font-size:13px}
+  .timhead b{font-weight:640;letter-spacing:-.01em}
+  .timkosong{padding:16px 18px;font-size:12.5px;color:var(--muted)}
+  .mbody{overflow-x:auto}
+
+  /* ---------- tabel ---------- */
   table{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;
     min-width:940px}
   th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);
     padding:0;text-align:center}
-  thead th{background:var(--card);font-size:11px;font-weight:600;color:var(--muted);
-    padding:5px 2px;line-height:1.25;white-space:nowrap}
-  thead th .dw{display:block;font-size:9.5px;font-weight:500;opacity:.8;text-transform:uppercase}
+  thead th{background:var(--card);font-size:10.5px;font-weight:600;color:var(--muted);
+    padding:6px 2px;line-height:1.3;white-space:nowrap}
+  thead th .dw{display:block;font-size:9px;font-weight:500;opacity:.75;
+    text-transform:uppercase;letter-spacing:.03em}
   th.nm,td.nm{position:sticky;left:0;z-index:5;background:var(--card);text-align:left;
-    padding:0 10px;width:104px;font-weight:600;font-size:13px;box-shadow:1px 0 0 var(--line);
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  td.nm{height:34px}
-  th.tot,td.tot{width:50px;font-weight:650;background:var(--bg)}
-  td.d{height:34px;cursor:pointer;font-size:13px;font-weight:600;user-select:none}
-  td.d:hover{outline:2px solid var(--accent);outline-offset:-2px}
+    padding:0 12px;width:104px;font-weight:550;font-size:13px;
+    box-shadow:1px 0 0 var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  td.nm{height:36px}
+  th.tot,td.tot{width:50px;font-weight:650;background:var(--bg);font-size:12.5px}
+  td.d{height:36px;cursor:pointer;font-size:13px;font-weight:600;user-select:none;
+    transition:outline-color .1s}
+  tbody tr:hover td.nm{color:var(--accent)}
+  td.d:hover{outline:2px solid var(--accent);outline-offset:-2px;border-radius:2px}
   th.we,td.we{background:var(--weekend)}
   th.we{color:var(--weekend-ink)}
   th.hd,td.hd{background:var(--holiday)}
   th.hd{color:var(--holiday-ink)}
-  th.now{box-shadow:inset 0 -3px 0 var(--accent);color:var(--accent)}
+  th.now{box-shadow:inset 0 -2.5px 0 var(--accent);color:var(--accent);font-weight:700}
   td.mk-M{background:var(--m-bg);color:var(--m)}
   td.mk-P{background:var(--p-bg);color:var(--p)}
   td.mk-S{background:var(--s-bg);color:var(--s)}
   td.mk-L{background:var(--l-bg);color:var(--l)}
-  tr.sum td{background:var(--bg);font-size:11.5px;font-weight:650;color:var(--muted);height:28px}
+  tr.sum td{background:var(--bg);font-size:11.5px;font-weight:650;color:var(--muted);
+    height:30px}
   tr.sum td.warn{color:#dc2626}
-  .holbar{padding:8px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--holiday-ink);
-    background:#fffaf2;display:flex;flex-wrap:wrap;gap:6px 16px}
+
+  /* ---------- kaki kartu ---------- */
+  .holbar{padding:10px 18px;border-top:1px solid var(--line);font-size:12px;
+    color:var(--holiday-ink);background:var(--holiday);
+    display:flex;flex-wrap:wrap;gap:6px 18px}
   .holbar b{font-weight:650}
-  .legend{display:flex;flex-wrap:wrap;gap:14px;padding:10px 16px;font-size:12px;
+  .legend{display:flex;flex-wrap:wrap;gap:16px;padding:11px 18px;font-size:12px;
     color:var(--muted);border-top:1px solid var(--line)}
-  .legend span{display:flex;align-items:center;gap:6px}
-  .sw{width:14px;height:14px;border-radius:4px;border:1px solid var(--line);display:inline-block}
-  dialog{border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);
-    box-shadow:0 20px 60px rgba(0,0,0,.28);padding:0;max-width:min(94vw,600px);width:100%}
-  dialog::backdrop{background:rgba(8,12,20,.5)}
-  .dh{padding:14px 18px;border-bottom:1px solid var(--line);font-weight:650;font-size:15px}
-  .dc{padding:16px 18px;max-height:62vh;overflow:auto}
-  .df{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end}
-  .row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-  .row label{min-width:100px;color:var(--muted);font-size:12.5px}
+  .legend span{display:flex;align-items:center;gap:7px}
+  .legend.petunjuk{color:var(--muted);font-style:normal;background:var(--bg)}
+  .sw{width:13px;height:13px;border-radius:4px;border:1px solid var(--line-kuat);
+    display:inline-block;flex:none}
+
+  /* ---------- dialog ---------- */
+  dialog{border:1px solid var(--line);border-radius:var(--r-besar);background:var(--card);
+    color:var(--ink);box-shadow:0 20px 50px rgba(15,23,42,.2);padding:0;
+    max-width:min(94vw,600px);width:100%}
+  dialog::backdrop{background:rgba(15,23,42,.45);backdrop-filter:blur(3px)}
+  .dh{padding:16px 20px;border-bottom:1px solid var(--line);font-weight:650;font-size:15.5px;
+    letter-spacing:-.015em}
+  .dh .chip{font-weight:500;margin-left:8px;vertical-align:2px}
+  .dc{padding:18px 20px;max-height:62vh;overflow:auto}
+  .df{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:8px;
+    justify-content:flex-end;flex-wrap:wrap;background:var(--bg);
+    border-radius:0 0 var(--r-besar) var(--r-besar)}
+  .row{display:flex;gap:8px;align-items:center;margin-bottom:9px}
+  .row label{min-width:100px;color:var(--muted);font-size:12.5px;font-weight:500}
   .row input,.row select{flex:1;min-width:0}
-  .yrhead{display:flex;align-items:center;gap:8px;margin:14px 0 8px;padding-top:12px;
+  .yrhead{display:flex;align-items:center;gap:8px;margin:16px 0 9px;padding-top:14px;
     border-top:1px solid var(--line);font-weight:650;font-size:13px}
   .yrhead:first-child{margin-top:0;padding-top:0;border-top:0}
   .est{font-size:10px;font-weight:700;color:var(--holiday-ink);background:var(--holiday);
-    border:1px solid #f0d6a8;border-radius:5px;padding:1px 5px;white-space:nowrap}
-  .hint{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.7}
-  #botEx{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-  #botEx button{color:var(--muted);font-size:11.5px}
+    border:1px solid #fcd34d;border-radius:5px;padding:2px 6px;white-space:nowrap}
+  .hint{font-size:12px;color:var(--muted);margin-top:13px;line-height:1.7}
+  .warnbox{font-size:12.5px;color:#92400e;background:var(--holiday);border:1px solid #fcd34d;
+    border-radius:var(--r);padding:11px 13px;line-height:1.6;margin-bottom:15px}
+
+  /* ---------- asisten ---------- */
+  #botEx{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
+  #botEx button{color:var(--muted);font-size:11.5px;border-style:dashed}
   .botOut:empty{display:none}
-  .botOut{font-size:13px;line-height:1.6;border-radius:9px;padding:11px 13px;margin-top:4px}
-  .botOut.ok{background:var(--m-bg);border:1px solid #b7e2c9;color:#155e3f}
-  .botOut.bad{background:#fdf1f1;border:1px solid #f3c9c6;color:#96281f}
+  .botOut{font-size:13px;line-height:1.6;border-radius:var(--r);padding:12px 14px;margin-top:4px}
+  .botOut.ok{background:var(--m-bg);border:1px solid #6ee7b7;color:#065f46}
+  .botOut.bad{background:#fef2f2;border:1px solid #fca5a5;color:#991b1b}
   .botOut b{font-weight:650}
-  .botNote{margin:8px 0 0;font-size:12.5px;opacity:.9}
-  .botTab{width:100%;border-collapse:collapse;margin:8px 0 0;min-width:0;table-layout:fixed}
-  .botTab td{border:0;padding:3px 0;text-align:left;font-size:12.5px}
+  .botNote{margin:9px 0 0;font-size:12.5px;opacity:.9}
+  .botTab{width:100%;border-collapse:collapse;margin:9px 0 0;min-width:0;table-layout:fixed}
+  .botTab td{border:0;padding:4px 0;text-align:left;font-size:12.5px}
   .botTab td.num{width:36px;text-align:right;font-weight:650;padding-right:10px}
-  .botTab td.bar{width:52%}
-  .botTab td.bar{background:linear-gradient(var(--line),var(--line)) left center/100% 7px no-repeat;border-radius:4px}
+  .botTab td.bar{width:52%;background:linear-gradient(var(--line),var(--line))
+    left center/100% 7px no-repeat;border-radius:4px}
   .botTab td.bar i{display:block;height:7px;border-radius:4px;background:var(--m);min-width:2px}
-  .warnbox{font-size:12.5px;color:#8a5300;background:#fff7e8;border:1px solid #f0d6a8;
-    border-radius:9px;padding:10px 12px;line-height:1.6;margin-bottom:14px}
-  #barBaru{position:fixed;left:0;right:0;bottom:0;z-index:80;display:flex;flex-wrap:wrap;
-    gap:10px;align-items:center;justify-content:center;padding:11px 16px;
-    background:#1f2937;color:#f3f4f6;font-size:13px;
-    box-shadow:0 -4px 16px rgba(0,0,0,.18)}
-  #barBaru button{padding:5px 12px;font-size:12.5px}
-  #barBaru button:not(.primary){background:transparent;color:#cbd5e1;border-color:#4b5563}
-  #barBaru button:not(.primary):hover{color:#fff;border-color:#9ca3af}
-  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(20px);
-    background:var(--ink);color:var(--card);padding:9px 16px;border-radius:10px;
-    font-size:13px;opacity:0;pointer-events:none;transition:.22s;z-index:99}
+
+  /* ---------- riwayat ---------- */
+  .logrow{display:flex;gap:14px;align-items:baseline;padding:6px 2px;font-size:12.5px;
+    border-bottom:1px solid var(--line)}
+  .logrow:last-child{border-bottom:0}
+  .logjam{flex:none;width:42px;color:var(--muted);font-variant-numeric:tabular-nums;
+    font-size:11.5px}
+
+  /* ---------- lain-lain ---------- */
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);
+    background:var(--ink);color:#f8fafc;padding:11px 18px;border-radius:12px;
+    font-size:13px;opacity:0;pointer-events:none;transition:.2s cubic-bezier(.4,0,.2,1);
+    z-index:99;box-shadow:var(--shadow-naik);max-width:min(92vw,520px);text-align:center}
   .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-  .empty{text-align:center;color:var(--muted);padding:70px 20px}
+  #barBaru{position:fixed;left:0;right:0;bottom:0;z-index:80;display:flex;flex-wrap:wrap;
+    gap:10px;align-items:center;justify-content:center;padding:13px 18px;
+    background:var(--ink);color:#e2e8f0;font-size:13px;
+    box-shadow:0 -4px 20px rgba(15,23,42,.2)}
+  #barBaru button{padding:6px 13px;font-size:12.5px}
+  #barBaru button:not(.primary){background:transparent;color:#cbd5e1;border-color:#475569}
+  #barBaru button:not(.primary):hover{background:#1e293b;color:#fff;border-color:#64748b}
+  .empty{text-align:center;color:var(--muted);padding:80px 20px}
+
+  /* ---------- animasi ----------
+     Seluruhnya dimatikan bila sistem diatur mengurangi gerak. */
+  @media (prefers-reduced-motion: no-preference){
+    @keyframes naikMasuk{from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none}}
+    @keyframes munculDialog{from{opacity:0;transform:translateY(8px) scale(.98)} to{opacity:1;transform:none}}
+    @keyframes redupMasuk{from{opacity:0} to{opacity:1}}
+    @keyframes tandaMuncul{0%{transform:scale(.4);opacity:.3}
+                           60%{transform:scale(1.15)}
+                           100%{transform:scale(1);opacity:1}}
+    @keyframes denyut{0%,100%{box-shadow:0 0 0 0 rgba(180,83,9,0)}
+                      50%{box-shadow:0 0 0 4px rgba(180,83,9,.16)}}
+    @keyframes naikBar{from{transform:translateY(100%)} to{transform:none}}
+
+    .animasi .month{animation:naikMasuk .36s cubic-bezier(.16,1,.3,1) backwards}
+    .animasi .month:nth-child(2){animation-delay:.05s}
+    .animasi .month:nth-child(3){animation-delay:.1s}
+    .animasi .month:nth-child(n+4){animation-delay:.15s}
+
+    dialog[open]{animation:munculDialog .2s cubic-bezier(.16,1,.3,1)}
+    dialog[open]::backdrop{animation:redupMasuk .2s ease}
+    .menu[open] .menuPop{animation:munculDialog .14s cubic-bezier(.16,1,.3,1)}
+
+    td.d.baru{animation:tandaMuncul .3s cubic-bezier(.34,1.3,.64,1)}
+    .badge.warn{animation:denyut 1.6s ease-in-out 2}
+    #barBaru{animation:naikBar .3s cubic-bezier(.16,1,.3,1)}
+    button:active{transform:scale(.97)}
+    .month{transition:box-shadow .2s}
+    .month:hover{box-shadow:var(--shadow-naik)}
+  }
+
   @media print{
-    header button,header select,.pen,.badge,.mhead button,.toast{display:none!important}
-    header{position:static;box-shadow:none;padding:0 0 10px;border-bottom:1px solid #ccc}
+    header button,header select,.pen,.badge,.bar2,.mhead button,.toast,#barBaru{
+      display:none!important}
+    header{position:static;box-shadow:none;padding:0 0 10px;border-bottom:1px solid #ccc;
+      background:#fff;backdrop-filter:none}
     body{background:#fff}
-    .month{break-inside:avoid;box-shadow:none;border-color:#ccc}
+    .month{break-inside:avoid;box-shadow:none;border-color:#ccc;max-width:none}
     .mbody{overflow:visible}
   }
 </style>
@@ -176,33 +281,48 @@
     <span class="vline"></span>
     <h1>Jadwal Masuk Pagi &amp; Piket</h1>
     <div class="spacer"></div>
-    <div class="pen adminOnly" id="pen">
+    <select id="fYear"></select>
+    <select id="fMonth"></select>
+    <span class="badge on adminOnly" id="adminBadge">Mode Admin</span>
+    <span class="badge adminOnly" id="pubBadge" hidden>Tersimpan</span>
+    <div class="grup">
+      <button id="bExport">Ekspor</button>
+      <button id="bPrint">Cetak</button>
+      <button id="bHol">Libur Nasional</button>
+    </div>
+    <div class="grup adminOnly">
+      <button id="bUndo" hidden>Batal</button>
+      <button id="bSave" title="Simpan perubahan jadwal" data-perlu="0">Simpan</button>
+    </div>
+    <button id="bLogin">Masuk Admin</button>
+  </div>
+  <div class="bar2 adminOnly">
+    <div class="pen" id="pen">
       <b>Tanda</b>
       <button data-mk="M"><span class="dot" style="background:var(--m)"></span>Masuk Pagi</button>
       <button data-mk="P"><span class="dot" style="background:var(--p)"></span>Piket OD</button>
       <button data-mk="S"><span class="dot" style="background:var(--s)"></span>Siang</button>
       <button data-mk="L"><span class="dot" style="background:var(--l)"></span>Cuti/Izin</button>
     </div>
-    <select id="fYear"></select>
-    <select id="fMonth"><option value="">Semua bulan</option><option value="10">Oktober</option></select>
-    <button id="bSave" class="adminOnly" title="Simpan seluruh jadwal ke berkas HTML" data-perlu="0">Simpan</button>
-    <button id="bUndo" class="adminOnly" hidden="">Batal</button>
-    <button id="bAdd" class="primary adminOnly">+ Tambah Bulan</button>
-    <button id="bBot" class="adminOnly">Asisten</button>
-    <button id="bGh" class="adminOnly">GitHub</button>
-    <button id="bLog" class="adminOnly">Riwayat</button>
-    <button id="bNames" class="adminOnly">Pegawai</button>
-    <button id="bHol">Libur Nasional</button>
-    <button id="bExport">Ekspor</button>
-    <button id="bImport" class="adminOnly">Impor</button>
-    <button id="bPrint">Cetak</button>
-    <button id="bLogin">Masuk Admin</button>
-    <span class="badge on adminOnly" id="adminBadge">Mode Admin</span>
-    <span class="badge adminOnly" id="pubBadge" hidden="">Tersimpan · belum terkirim</span>
-    <span class="badge adminOnly on" id="ghBadge"></span>
-    <button id="bPw" class="adminOnly">Ubah Sandi</button>
-    <button id="bLogout" class="adminOnly">Keluar</button>
-  </div>
+    <div class="spacer"></div>
+    <div class="grup">
+      <button id="bAdd" class="primary">+ Tambah Bulan</button>
+      <button id="bBot">Asisten</button>
+      <button id="bNames">Pegawai</button>
+    </div>
+    <div class="grup">
+      <details class="menu" id="menuLain">
+        <summary>Lainnya</summary>
+        <div class="menuPop">
+          <button id="bGh">Pengaturan GitHub</button>
+          <button id="bLog">Riwayat Kegiatan</button>
+          <button id="bImport">Impor Cadangan</button>
+          <button id="bPw">Ubah Sandi</button>
+          <button id="bLogout">Keluar dari Admin</button>
+        </div>
+      </details>
+      <span class="badge" id="ghBadge"></span>
+    </div>
 </header>
 <main id="app"></main>
 <div class="toast" id="toast"></div>
@@ -393,7 +513,7 @@
 </dialog>
 
 <script>
-const SEED = {"names":["Syifa","Herry","Fiki","Dewa","Andri","Adit","Rizal","Clara","Pandu","Edu","Arry","Dwi"],"months":{"2026-07":{"year":2026,"month":7,"cells":{"Syifa":{"1":"M","8":"M","11":"P","15":"M"},"Herry":{"6":"M","16":"M","18":"P","22":"M","30":"M"},"Fiki":{"2":"M","13":"M","23":"M","31":"M"},"Adit":{"3":"M","14":"M","24":"M"},"Dewa":{"7":"M","19":"S","21":"M","28":"M"},"Andri":{"9":"M","17":"M","27":"M"},"Rizal":{"10":"M","20":"M","29":"M"},"Clara":{},"Pandu":{},"Edu":{},"Arry":{},"Dwi":{}},"sembunyi":true},"2026-08":{"year":2026,"month":8,"cells":{"Syifa":{"7":"M","13":"M","21":"M"},"Herry":{"4":"M","14":"M","23":"S","31":"M"},"Fiki":{"10":"M","16":"P","20":"M"},"Dewa":{"19":"M","24":"M"},"Adit":{"3":"M","12":"M","17":"S","27":"M"},"Andri":{"5":"M","11":"M","15":"P","26":"M"},"Rizal":{"6":"M","18":"M","22":"S","28":"M"},"Clara":{},"Pandu":{},"Edu":{},"Arry":{},"Dwi":{}},"sembunyi":true},"2026-09":{"year":2026,"month":9,"cells":{"Syifa":{"3":"M","9":"M","25":"M"},"Herry":{"18":"M","23":"M","28":"M"},"Fiki":{"4":"M","10":"M","21":"M"},"Dewa":{"14":"M","24":"M","30":"M"},"Adit":{"2":"M","11":"M","17":"M"},"Andri":{"7":"M","15":"M","29":"M"},"Rizal":{"1":"M","8":"M","16":"M","22":"M"},"Clara":{"7":"M","14":"M","21":"M","28":"M"},"Pandu":{"1":"M","8":"M","15":"M","22":"M","29":"M"},"Edu":{"4":"M","11":"M","18":"M","25":"M"},"Arry":{"3":"M","10":"M","17":"M","24":"M"},"Dwi":{"2":"M","9":"M","16":"M","23":"M","30":"M"}},"sembunyi":true},"2026-10":{"year":2026,"month":10,"cells":{"Syifa":{"7":"M","9":"M","20":"M","23":"M"},"Herry":{"6":"M","19":"M","24":"S","28":"M"},"Fiki":{"1":"M","8":"M","16":"M","27":"M"},"Dewa":{"13":"M","30":"M"},"Andri":{"14":"M","21":"M","29":"M"},"Adit":{"2":"M","12":"M","22":"M","31":"P"},"Rizal":{"5":"M","15":"M","26":"M"},"Clara":{},"Pandu":{"7":"M","13":"M","19":"M","23":"M","29":"M"},"Edu":{"2":"M","8":"M","14":"M","20":"M","26":"M","30":"M"},"Arry":{"1":"M","5":"M","9":"M","10":"P","15":"M","21":"M","27":"M"},"Dwi":{"6":"M","12":"M","16":"M","22":"M","25":"S","28":"M"}},"sembunyi":false}},"holidays":[{"date":"2026-01-01","name":"Tahun Baru Masehi 2026"},{"date":"2026-02-17","name":"Tahun Baru Imlek 2577 Kongzili"},{"date":"2026-03-19","name":"Hari Suci Nyepi (Tahun Baru Saka 1948)"},{"date":"2026-03-21","name":"Idul Fitri 1447 H (hari pertama)"},{"date":"2026-03-22","name":"Idul Fitri 1447 H (hari kedua)"},{"date":"2026-04-03","name":"Wafat Isa Almasih"},{"date":"2026-05-01","name":"Hari Buruh Internasional"},{"date":"2026-05-14","name":"Kenaikan Isa Almasih"},{"date":"2026-05-15","name":"Cuti Bersama Kenaikan Isa Almasih"},{"date":"2026-05-27","name":"Idul Adha 1447 H"},{"date":"2026-05-28","name":"Cuti Bersama Idul Adha 1447 H"},{"date":"2026-05-31","name":"Hari Raya Waisak 2570 BE"},{"date":"2026-06-01","name":"Hari Lahir Pancasila"},{"date":"2026-08-17","name":"HUT Kemerdekaan RI ke-81"},{"date":"2026-08-25","name":"Maulid Nabi Muhammad SAW 1448 H"},{"date":"2026-12-25","name":"Hari Raya Natal"},{"date":"2027-01-01","name":"Tahun Baru 2027 Masehi"},{"date":"2027-01-05","name":"Isra Mikraj Nabi Muhammad SAW"},{"date":"2027-02-05","name":"Cuti Bersama Tahun Baru Imlek"},{"date":"2027-02-06","name":"Tahun Baru Imlek 2578 Kongzili"},{"date":"2027-03-08","name":"Hari Suci Nyepi (Tahun Baru Saka 1949)"},{"date":"2027-03-09","name":"Cuti Bersama Idulfitri"},{"date":"2027-03-10","name":"Idulfitri 1448 H (hari pertama)"},{"date":"2027-03-11","name":"Idulfitri 1448 H (hari kedua)"},{"date":"2027-03-12","name":"Cuti Bersama Idulfitri"},{"date":"2027-03-15","name":"Cuti Bersama Idulfitri"},{"date":"2027-03-25","name":"Cuti Bersama Wafat Yesus Kristus"},{"date":"2027-03-26","name":"Wafat Yesus Kristus"},{"date":"2027-03-28","name":"Kebangkitan Yesus Kristus (Paskah)"},{"date":"2027-05-01","name":"Hari Buruh Internasional"},{"date":"2027-05-06","name":"Kenaikan Yesus Kristus"},{"date":"2027-05-17","name":"Iduladha 1448 H"},{"date":"2027-05-18","name":"Cuti Bersama Iduladha"},{"date":"2027-05-19","name":"Cuti Bersama Waisak"},{"date":"2027-05-20","name":"Hari Raya Waisak 2571 BE"},{"date":"2027-06-01","name":"Hari Lahir Pancasila"},{"date":"2027-06-06","name":"Tahun Baru Islam 1449 H (1 Muharam)"},{"date":"2027-08-15","name":"Maulid Nabi Muhammad SAW"},{"date":"2027-08-17","name":"Proklamasi Kemerdekaan RI"},{"date":"2027-12-24","name":"Cuti Bersama Natal"},{"date":"2027-12-25","name":"Kelahiran Yesus Kristus (Natal)"},{"date":"2027-12-26","name":"Isra Mikraj Nabi Muhammad SAW 1449 H"}],"admin":{"hash":"1g6mb70-126me2y"},"stamp":"2026-10-13T00:14:05.243Z","belumTerbit":false,"teams":[{"nama":"SDR & CDR","anggota":["Syifa","Herry","Fiki","Dewa","Andri","Adit","Rizal"]},{"nama":"DDR","anggota":["Clara","Pandu","Edu","Arry","Dwi"]}],"ghRepo":{"repo":"JalinPembayaran-ops/Jadwal-Piket-Pagi","branch":"main","path":"index.html","otomatis":true},"log":[{"t":"2026-09-10T08:45:37.832Z","a":"Syifa · 27 September 2026 — ditandai Masuk Pagi"},{"t":"2026-09-10T08:45:39.052Z","a":"Herry · 27 September 2026 — ditandai Masuk Pagi"},{"t":"2026-09-10T08:45:40.345Z","a":"Jadwal disimpan"},{"t":"2026-09-10T08:45:42.844Z","a":"Jadwal dikirim ke GitHub"},{"t":"2026-09-10T08:45:57.575Z","a":"Syifa · 27 September 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-10T08:45:58.561Z","a":"Herry · 27 September 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-10T08:54:51.254Z","a":"Nama tim SRR & CDR diubah menjadi SDR & CDR"},{"t":"2026-09-10T08:54:53.148Z","a":"Jadwal disimpan"},{"t":"2026-09-16T08:32:05.988Z","a":"Fiki · 27 September 2026 — ditandai Masuk Pagi"},{"t":"2026-09-16T08:32:39.825Z","a":"Jadwal disimpan"},{"t":"2026-09-21T02:27:12.527Z","a":"Fiki · 27 September 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-21T02:27:15.375Z","a":"Jadwal disimpan"},{"t":"2026-09-22T01:53:09.765Z","a":"14 hari libur tahun 2027 disusun otomatis"},{"t":"2026-09-22T01:53:29.306Z","a":"Jadwal disimpan"},{"t":"2026-09-22T08:57:37.090Z","a":"Perubahan sejak simpanan terakhir dibatalkan"},{"t":"2026-09-22T08:58:07.976Z","a":"Oktober 2026 ditambahkan"},{"t":"2026-09-22T08:58:10.603Z","a":"Oktober 2026 disembunyikan dari tim"},{"t":"2026-09-22T08:58:35.473Z","a":"Pandu · 1 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:36.402Z","a":"Edu · 2 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:38.090Z","a":"Arry · 5 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:39.245Z","a":"Dwi · 6 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:43.599Z","a":"Pandu · 8 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:45.216Z","a":"Edu · 9 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:50.754Z","a":"Pandu · 7 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:51.955Z","a":"Pandu · 8 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-22T08:58:52.493Z","a":"Edu · 8 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:53.120Z","a":"Edu · 9 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-22T08:58:53.528Z","a":"Arry · 9 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:07.811Z","a":"Dwi · 12 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:11.065Z","a":"Pandu · 13 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:12.249Z","a":"Edu · 14 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:12.829Z","a":"Arry · 15 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:13.774Z","a":"Dwi · 16 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:19.505Z","a":"Pandu · 19 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:20.558Z","a":"Edu · 20 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:21.261Z","a":"Arry · 21 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:21.997Z","a":"Dwi · 22 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:23.112Z","a":"Pandu · 23 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:24.234Z","a":"Edu · 26 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:25.346Z","a":"Arry · 27 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:26.056Z","a":"Dwi · 28 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:27.783Z","a":"Pandu · 29 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:28.416Z","a":"Edu · 30 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:58.139Z","a":"Oktober 2026 ditampilkan kembali"},{"t":"2026-09-22T09:00:43.487Z","a":"Arry · 10 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T09:00:50.135Z","a":"Oktober 2026 disembunyikan dari tim"},{"t":"2026-09-22T09:00:51.529Z","a":"Jadwal disimpan"},{"t":"2026-09-23T02:45:09.740Z","a":"SDR & CDR di Oktober 2026 terisi otomatis"},{"t":"2026-09-23T02:46:18.692Z","a":"Jadwal disimpan"},{"t":"2026-09-24T02:02:48.138Z","a":"Andri · 1 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:03:12.743Z","a":"Fiki · 1 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:05:55.457Z","a":"Dewa · 29 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:05:56.906Z","a":"Adit · 29 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:06:15.659Z","a":"Dewa · 29 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:06:16.755Z","a":"Adit · 29 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:06:25.056Z","a":"Dewa · 9 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:06:26.027Z","a":"Dewa · 9 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:06:30.385Z","a":"Dewa · 9 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:06:33.615Z","a":"Adit · 9 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:06:46.812Z","a":"Adit · 13 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:06:47.554Z","a":"Adit · 13 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:06:55.944Z","a":"Adit · 13 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:07:02.420Z","a":"Adit · 15 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:07:03.688Z","a":"Syifa · 15 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:07:07.406Z","a":"Syifa · 15 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:07:09.042Z","a":"Adit · 15 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:07:20.269Z","a":"Adit · 14 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:07:21.285Z","a":"Rizal · 14 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:07:22.866Z","a":"Rizal · 13 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:12:23.100Z","a":"Jadwal disimpan"},{"t":"2026-09-28T09:21:36.095Z","a":"Herry · 16 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-28T09:21:37.250Z","a":"Fiki · 16 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-28T09:21:40.014Z","a":"Fiki · 19 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-28T09:21:40.968Z","a":"Herry · 19 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-28T09:21:56.837Z","a":"Jadwal disimpan"},{"t":"2026-09-29T02:16:52.245Z","a":"Syifa · 6 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:16:55.648Z","a":"Herry · 7 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:16:57.811Z","a":"Syifa · 7 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:16:59.511Z","a":"Herry · 6 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:19:14.092Z","a":"Syifa · 15 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:19:15.917Z","a":"Syifa · 23 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:22:24.601Z","a":"Jadwal disimpan"},{"t":"2026-09-29T02:31:40.327Z","a":"Syifa · 26 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:31:45.427Z","a":"Syifa · 20 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:32:23.361Z","a":"Syifa · 9 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:33:53.773Z","a":"Jadwal disimpan"},{"t":"2026-09-29T02:40:19.591Z","a":"Adit · 9 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:40:22.988Z","a":"Rizal · 23 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:40:30.503Z","a":"Rizal · 26 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:40:50.352Z","a":"Dewa · 20 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:40:54.102Z","a":"Dewa · 15 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:42:19.588Z","a":"Jadwal disimpan"},{"t":"2026-09-29T02:58:20.813Z","a":"Dewa · 29 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:58:21.894Z","a":"Dewa · 30 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:58:22.949Z","a":"Andri · 30 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:58:23.930Z","a":"Andri · 29 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:58:49.941Z","a":"Jadwal disimpan"},{"t":"2026-09-29T07:45:06.455Z","a":"Oktober 2026 ditampilkan kembali"},{"t":"2026-09-29T07:45:09.019Z","a":"Jadwal disimpan"},{"t":"2026-09-29T07:47:38.842Z","a":"September 2026 disembunyikan dari tim"},{"t":"2026-09-29T07:47:40.654Z","a":"Jadwal disimpan"},{"t":"2026-09-29T07:49:38.996Z","a":"Adit · 14 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T07:49:39.978Z","a":"Adit · 12 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T07:49:41.250Z","a":"Andri · 12 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T07:49:42.185Z","a":"Andri · 14 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T07:49:45.345Z","a":"Jadwal disimpan"},{"t":"2026-09-29T07:49:48.428Z","a":"Jadwal dikirim ke GitHub"},{"t":"2026-09-29T07:50:45.873Z","a":"Fiki · 10 Oktober 2026 — ditandai Piket OD"},{"t":"2026-09-29T07:51:01.918Z","a":"Herry · 24 Oktober 2026 — ditandai Masuk Siang"},{"t":"2026-09-29T07:51:25.461Z","a":"Adit · 31 Oktober 2026 — ditandai Piket OD"},{"t":"2026-09-29T07:51:28.479Z","a":"Jadwal disimpan"},{"t":"2026-09-29T08:50:38.940Z","a":"Herry · 27 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T08:50:39.847Z","a":"Herry · 28 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T08:50:40.734Z","a":"Fiki · 28 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T08:50:41.637Z","a":"Fiki · 27 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T08:51:17.103Z","a":"Jadwal disimpan"},{"t":"2026-09-30T08:23:11.978Z","a":"Arry · 10 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T08:23:15.505Z","a":"Arry · 10 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-30T08:23:19.584Z","a":"Arry · 10 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T08:23:29.429Z","a":"Fiki · 10 Oktober 2026 — tanda Piket OD dihapus"},{"t":"2026-09-30T08:23:34.608Z","a":"Dewa · 10 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-30T08:23:35.551Z","a":"Dewa · 10 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T08:23:37.584Z","a":"Fiki · 10 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-30T08:23:38.207Z","a":"Fiki · 10 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T08:23:40.007Z","a":"Fiki · 10 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-30T08:24:00.426Z","a":"Arry · 10 Oktober 2026 — ditandai Piket OD"},{"t":"2026-09-30T08:24:40.966Z","a":"Arry · 1 Oktober 2026 — ditandai Piket OD"},{"t":"2026-09-30T08:24:41.991Z","a":"Arry · 1 Oktober 2026 — tanda Piket OD dilepas"},{"t":"2026-09-30T08:24:43.868Z","a":"Arry · 1 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-30T08:24:44.833Z","a":"Pandu · 1 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T08:24:48.733Z","a":"Jadwal disimpan"},{"t":"2026-09-30T09:19:56.370Z","a":"Dwi · 25 Oktober 2026 — ditandai Masuk Siang"},{"t":"2026-09-30T09:19:58.865Z","a":"Jadwal disimpan"},{"t":"2026-09-30T09:20:03.091Z","a":"Jadwal dikirim ke GitHub"},{"t":"2026-09-30T09:20:56.170Z","a":"Fiki · 10 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T09:20:59.245Z","a":"Jadwal disimpan"},{"t":"2026-10-13T00:14:00.027Z","a":"Dewa · 15 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-10-13T00:14:01.098Z","a":"Dewa · 13 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-10-13T00:14:02.216Z","a":"Rizal · 13 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-10-13T00:14:03.144Z","a":"Rizal · 15 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-10-13T00:14:05.239Z","a":"Jadwal disimpan"}]};
+const SEED = {"names":["Syifa","Herry","Fiki","Dewa","Andri","Adit","Rizal","Clara","Pandu","Edu","Arry","Dwi"],"months":{"2026-07":{"year":2026,"month":7,"cells":{"Syifa":{"1":"M","8":"M","11":"P","15":"M"},"Herry":{"6":"M","16":"M","18":"P","22":"M","30":"M"},"Fiki":{"2":"M","13":"M","23":"M","31":"M"},"Adit":{"3":"M","14":"M","24":"M"},"Dewa":{"7":"M","19":"S","21":"M","28":"M"},"Andri":{"9":"M","17":"M","27":"M"},"Rizal":{"10":"M","20":"M","29":"M"},"Clara":{},"Pandu":{},"Edu":{},"Arry":{},"Dwi":{}},"sembunyi":true},"2026-08":{"year":2026,"month":8,"cells":{"Syifa":{"7":"M","13":"M","21":"M"},"Herry":{"4":"M","14":"M","23":"S","31":"M"},"Fiki":{"10":"M","16":"P","20":"M"},"Dewa":{"19":"M","24":"M"},"Adit":{"3":"M","12":"M","17":"S","27":"M"},"Andri":{"5":"M","11":"M","15":"P","26":"M"},"Rizal":{"6":"M","18":"M","22":"S","28":"M"},"Clara":{},"Pandu":{},"Edu":{},"Arry":{},"Dwi":{}},"sembunyi":true},"2026-09":{"year":2026,"month":9,"cells":{"Syifa":{"3":"M","9":"M","25":"M"},"Herry":{"18":"M","23":"M","28":"M"},"Fiki":{"4":"M","10":"M","21":"M"},"Dewa":{"14":"M","24":"M","30":"M"},"Adit":{"2":"M","11":"M","17":"M"},"Andri":{"7":"M","15":"M","29":"M"},"Rizal":{"1":"M","8":"M","16":"M","22":"M"},"Clara":{"7":"M","14":"M","21":"M","28":"M"},"Pandu":{"1":"M","8":"M","15":"M","22":"M","29":"M"},"Edu":{"4":"M","11":"M","18":"M","25":"M"},"Arry":{"3":"M","10":"M","17":"M","24":"M"},"Dwi":{"2":"M","9":"M","16":"M","23":"M","30":"M"}},"sembunyi":true},"2026-10":{"year":2026,"month":10,"cells":{"Syifa":{"7":"M","9":"M","20":"M","23":"M"},"Herry":{"6":"M","19":"M","24":"S","28":"M"},"Fiki":{"1":"M","8":"M","16":"M","27":"M"},"Dewa":{"13":"M","30":"M"},"Andri":{"14":"M","21":"M","29":"M"},"Adit":{"2":"M","12":"M","22":"M","31":"P"},"Rizal":{"5":"M","15":"M","26":"M"},"Clara":{},"Pandu":{"7":"M","13":"M","19":"M","23":"M","29":"M"},"Edu":{"2":"M","8":"M","14":"M","20":"M","26":"M","30":"M"},"Arry":{"1":"M","5":"M","9":"M","10":"P","15":"M","21":"M","27":"M"},"Dwi":{"6":"M","12":"M","16":"M","22":"M","25":"S","28":"M"}},"sembunyi":false}},"holidays":[{"date":"2026-01-01","name":"Tahun Baru Masehi 2026"},{"date":"2026-02-17","name":"Tahun Baru Imlek 2577 Kongzili"},{"date":"2026-03-19","name":"Hari Suci Nyepi (Tahun Baru Saka 1948)"},{"date":"2026-03-21","name":"Idul Fitri 1447 H (hari pertama)"},{"date":"2026-03-22","name":"Idul Fitri 1447 H (hari kedua)"},{"date":"2026-04-03","name":"Wafat Isa Almasih"},{"date":"2026-05-01","name":"Hari Buruh Internasional"},{"date":"2026-05-14","name":"Kenaikan Isa Almasih"},{"date":"2026-05-15","name":"Cuti Bersama Kenaikan Isa Almasih"},{"date":"2026-05-27","name":"Idul Adha 1447 H"},{"date":"2026-05-28","name":"Cuti Bersama Idul Adha 1447 H"},{"date":"2026-05-31","name":"Hari Raya Waisak 2570 BE"},{"date":"2026-06-01","name":"Hari Lahir Pancasila"},{"date":"2026-08-17","name":"HUT Kemerdekaan RI ke-81"},{"date":"2026-08-25","name":"Maulid Nabi Muhammad SAW 1448 H"},{"date":"2026-12-25","name":"Hari Raya Natal"},{"date":"2027-01-01","name":"Tahun Baru 2027 Masehi"},{"date":"2027-01-05","name":"Isra Mikraj Nabi Muhammad SAW"},{"date":"2027-02-05","name":"Cuti Bersama Tahun Baru Imlek"},{"date":"2027-02-06","name":"Tahun Baru Imlek 2578 Kongzili"},{"date":"2027-03-08","name":"Hari Suci Nyepi (Tahun Baru Saka 1949)"},{"date":"2027-03-09","name":"Cuti Bersama Idulfitri"},{"date":"2027-03-10","name":"Idulfitri 1448 H (hari pertama)"},{"date":"2027-03-11","name":"Idulfitri 1448 H (hari kedua)"},{"date":"2027-03-12","name":"Cuti Bersama Idulfitri"},{"date":"2027-03-15","name":"Cuti Bersama Idulfitri"},{"date":"2027-03-25","name":"Cuti Bersama Wafat Yesus Kristus"},{"date":"2027-03-26","name":"Wafat Yesus Kristus"},{"date":"2027-03-28","name":"Kebangkitan Yesus Kristus (Paskah)"},{"date":"2027-05-01","name":"Hari Buruh Internasional"},{"date":"2027-05-06","name":"Kenaikan Yesus Kristus"},{"date":"2027-05-17","name":"Iduladha 1448 H"},{"date":"2027-05-18","name":"Cuti Bersama Iduladha"},{"date":"2027-05-19","name":"Cuti Bersama Waisak"},{"date":"2027-05-20","name":"Hari Raya Waisak 2571 BE"},{"date":"2027-06-01","name":"Hari Lahir Pancasila"},{"date":"2027-06-06","name":"Tahun Baru Islam 1449 H (1 Muharam)"},{"date":"2027-08-15","name":"Maulid Nabi Muhammad SAW"},{"date":"2027-08-17","name":"Proklamasi Kemerdekaan RI"},{"date":"2027-12-24","name":"Cuti Bersama Natal"},{"date":"2027-12-25","name":"Kelahiran Yesus Kristus (Natal)"},{"date":"2027-12-26","name":"Isra Mikraj Nabi Muhammad SAW 1449 H"}],"admin":{"hash":"1g6mb70-126me2y"},"stamp":"2026-10-13T11:16:24+07:00","belumTerbit":false,"teams":[{"nama":"SDR & CDR","anggota":["Syifa","Herry","Fiki","Dewa","Andri","Adit","Rizal"]},{"nama":"DDR","anggota":["Clara","Pandu","Edu","Arry","Dwi"]}],"ghRepo":{"repo":"JalinPembayaran-ops/Jadwal-Piket-Pagi","branch":"main","path":"index.html","otomatis":true},"log":[{"t":"2026-09-10T08:45:37.832Z","a":"Syifa · 27 September 2026 — ditandai Masuk Pagi"},{"t":"2026-09-10T08:45:39.052Z","a":"Herry · 27 September 2026 — ditandai Masuk Pagi"},{"t":"2026-09-10T08:45:40.345Z","a":"Jadwal disimpan"},{"t":"2026-09-10T08:45:42.844Z","a":"Jadwal dikirim ke GitHub"},{"t":"2026-09-10T08:45:57.575Z","a":"Syifa · 27 September 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-10T08:45:58.561Z","a":"Herry · 27 September 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-10T08:54:51.254Z","a":"Nama tim SRR & CDR diubah menjadi SDR & CDR"},{"t":"2026-09-10T08:54:53.148Z","a":"Jadwal disimpan"},{"t":"2026-09-16T08:32:05.988Z","a":"Fiki · 27 September 2026 — ditandai Masuk Pagi"},{"t":"2026-09-16T08:32:39.825Z","a":"Jadwal disimpan"},{"t":"2026-09-21T02:27:12.527Z","a":"Fiki · 27 September 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-21T02:27:15.375Z","a":"Jadwal disimpan"},{"t":"2026-09-22T01:53:09.765Z","a":"14 hari libur tahun 2027 disusun otomatis"},{"t":"2026-09-22T01:53:29.306Z","a":"Jadwal disimpan"},{"t":"2026-09-22T08:57:37.090Z","a":"Perubahan sejak simpanan terakhir dibatalkan"},{"t":"2026-09-22T08:58:07.976Z","a":"Oktober 2026 ditambahkan"},{"t":"2026-09-22T08:58:10.603Z","a":"Oktober 2026 disembunyikan dari tim"},{"t":"2026-09-22T08:58:35.473Z","a":"Pandu · 1 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:36.402Z","a":"Edu · 2 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:38.090Z","a":"Arry · 5 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:39.245Z","a":"Dwi · 6 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:43.599Z","a":"Pandu · 8 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:45.216Z","a":"Edu · 9 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:50.754Z","a":"Pandu · 7 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:51.955Z","a":"Pandu · 8 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-22T08:58:52.493Z","a":"Edu · 8 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:58:53.120Z","a":"Edu · 9 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-22T08:58:53.528Z","a":"Arry · 9 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:07.811Z","a":"Dwi · 12 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:11.065Z","a":"Pandu · 13 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:12.249Z","a":"Edu · 14 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:12.829Z","a":"Arry · 15 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:13.774Z","a":"Dwi · 16 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:19.505Z","a":"Pandu · 19 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:20.558Z","a":"Edu · 20 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:21.261Z","a":"Arry · 21 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:21.997Z","a":"Dwi · 22 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:23.112Z","a":"Pandu · 23 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:24.234Z","a":"Edu · 26 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:25.346Z","a":"Arry · 27 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:26.056Z","a":"Dwi · 28 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:27.783Z","a":"Pandu · 29 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:28.416Z","a":"Edu · 30 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T08:59:58.139Z","a":"Oktober 2026 ditampilkan kembali"},{"t":"2026-09-22T09:00:43.487Z","a":"Arry · 10 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-22T09:00:50.135Z","a":"Oktober 2026 disembunyikan dari tim"},{"t":"2026-09-22T09:00:51.529Z","a":"Jadwal disimpan"},{"t":"2026-09-23T02:45:09.740Z","a":"SDR & CDR di Oktober 2026 terisi otomatis"},{"t":"2026-09-23T02:46:18.692Z","a":"Jadwal disimpan"},{"t":"2026-09-24T02:02:48.138Z","a":"Andri · 1 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:03:12.743Z","a":"Fiki · 1 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:05:55.457Z","a":"Dewa · 29 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:05:56.906Z","a":"Adit · 29 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:06:15.659Z","a":"Dewa · 29 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:06:16.755Z","a":"Adit · 29 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:06:25.056Z","a":"Dewa · 9 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:06:26.027Z","a":"Dewa · 9 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:06:30.385Z","a":"Dewa · 9 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:06:33.615Z","a":"Adit · 9 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:06:46.812Z","a":"Adit · 13 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:06:47.554Z","a":"Adit · 13 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:06:55.944Z","a":"Adit · 13 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:07:02.420Z","a":"Adit · 15 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:07:03.688Z","a":"Syifa · 15 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:07:07.406Z","a":"Syifa · 15 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:07:09.042Z","a":"Adit · 15 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:07:20.269Z","a":"Adit · 14 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:07:21.285Z","a":"Rizal · 14 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-24T02:07:22.866Z","a":"Rizal · 13 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-24T02:12:23.100Z","a":"Jadwal disimpan"},{"t":"2026-09-28T09:21:36.095Z","a":"Herry · 16 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-28T09:21:37.250Z","a":"Fiki · 16 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-28T09:21:40.014Z","a":"Fiki · 19 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-28T09:21:40.968Z","a":"Herry · 19 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-28T09:21:56.837Z","a":"Jadwal disimpan"},{"t":"2026-09-29T02:16:52.245Z","a":"Syifa · 6 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:16:55.648Z","a":"Herry · 7 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:16:57.811Z","a":"Syifa · 7 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:16:59.511Z","a":"Herry · 6 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:19:14.092Z","a":"Syifa · 15 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:19:15.917Z","a":"Syifa · 23 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:22:24.601Z","a":"Jadwal disimpan"},{"t":"2026-09-29T02:31:40.327Z","a":"Syifa · 26 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:31:45.427Z","a":"Syifa · 20 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:32:23.361Z","a":"Syifa · 9 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:33:53.773Z","a":"Jadwal disimpan"},{"t":"2026-09-29T02:40:19.591Z","a":"Adit · 9 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:40:22.988Z","a":"Rizal · 23 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:40:30.503Z","a":"Rizal · 26 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:40:50.352Z","a":"Dewa · 20 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:40:54.102Z","a":"Dewa · 15 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:42:19.588Z","a":"Jadwal disimpan"},{"t":"2026-09-29T02:58:20.813Z","a":"Dewa · 29 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:58:21.894Z","a":"Dewa · 30 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:58:22.949Z","a":"Andri · 30 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T02:58:23.930Z","a":"Andri · 29 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T02:58:49.941Z","a":"Jadwal disimpan"},{"t":"2026-09-29T07:45:06.455Z","a":"Oktober 2026 ditampilkan kembali"},{"t":"2026-09-29T07:45:09.019Z","a":"Jadwal disimpan"},{"t":"2026-09-29T07:47:38.842Z","a":"September 2026 disembunyikan dari tim"},{"t":"2026-09-29T07:47:40.654Z","a":"Jadwal disimpan"},{"t":"2026-09-29T07:49:38.996Z","a":"Adit · 14 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T07:49:39.978Z","a":"Adit · 12 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T07:49:41.250Z","a":"Andri · 12 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T07:49:42.185Z","a":"Andri · 14 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T07:49:45.345Z","a":"Jadwal disimpan"},{"t":"2026-09-29T07:49:48.428Z","a":"Jadwal dikirim ke GitHub"},{"t":"2026-09-29T07:50:45.873Z","a":"Fiki · 10 Oktober 2026 — ditandai Piket OD"},{"t":"2026-09-29T07:51:01.918Z","a":"Herry · 24 Oktober 2026 — ditandai Masuk Siang"},{"t":"2026-09-29T07:51:25.461Z","a":"Adit · 31 Oktober 2026 — ditandai Piket OD"},{"t":"2026-09-29T07:51:28.479Z","a":"Jadwal disimpan"},{"t":"2026-09-29T08:50:38.940Z","a":"Herry · 27 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T08:50:39.847Z","a":"Herry · 28 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T08:50:40.734Z","a":"Fiki · 28 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-29T08:50:41.637Z","a":"Fiki · 27 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-29T08:51:17.103Z","a":"Jadwal disimpan"},{"t":"2026-09-30T08:23:11.978Z","a":"Arry · 10 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T08:23:15.505Z","a":"Arry · 10 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-30T08:23:19.584Z","a":"Arry · 10 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T08:23:29.429Z","a":"Fiki · 10 Oktober 2026 — tanda Piket OD dihapus"},{"t":"2026-09-30T08:23:34.608Z","a":"Dewa · 10 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-30T08:23:35.551Z","a":"Dewa · 10 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T08:23:37.584Z","a":"Fiki · 10 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-30T08:23:38.207Z","a":"Fiki · 10 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T08:23:40.007Z","a":"Fiki · 10 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-30T08:24:00.426Z","a":"Arry · 10 Oktober 2026 — ditandai Piket OD"},{"t":"2026-09-30T08:24:40.966Z","a":"Arry · 1 Oktober 2026 — ditandai Piket OD"},{"t":"2026-09-30T08:24:41.991Z","a":"Arry · 1 Oktober 2026 — tanda Piket OD dilepas"},{"t":"2026-09-30T08:24:43.868Z","a":"Arry · 1 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-09-30T08:24:44.833Z","a":"Pandu · 1 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T08:24:48.733Z","a":"Jadwal disimpan"},{"t":"2026-09-30T09:19:56.370Z","a":"Dwi · 25 Oktober 2026 — ditandai Masuk Siang"},{"t":"2026-09-30T09:19:58.865Z","a":"Jadwal disimpan"},{"t":"2026-09-30T09:20:03.091Z","a":"Jadwal dikirim ke GitHub"},{"t":"2026-09-30T09:20:56.170Z","a":"Fiki · 10 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-09-30T09:20:59.245Z","a":"Jadwal disimpan"},{"t":"2026-10-13T00:14:00.027Z","a":"Dewa · 15 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-10-13T00:14:01.098Z","a":"Dewa · 13 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-10-13T00:14:02.216Z","a":"Rizal · 13 Oktober 2026 — tanda Masuk Pagi dilepas"},{"t":"2026-10-13T00:14:03.144Z","a":"Rizal · 15 Oktober 2026 — ditandai Masuk Pagi"},{"t":"2026-10-13T00:14:05.239Z","a":"Jadwal disimpan"}]};
 
 const MK = {
   M:{label:"Masuk Pagi", glyph:"✓"},
@@ -411,6 +531,8 @@ const KEY = "jadwalPiket.v1";
 const SKEY = "jadwalPiket.admin";
 
 let adaBentrok = false;
+let animasiKartu = true;   // kartu hanya beranimasi saat daftarnya berubah
+let selBaru = null;        // sel yang baru disunting, untuk animasi kecil
 
 // Membuka halaman dengan ?bersih=1 membuang salinan jadwal yang tersimpan di
 // browser ini, lalu memakai isi berkas apa adanya. Pengaturan GitHub tidak ikut
@@ -494,9 +616,9 @@ function tandaTerbit(){
   const b = document.getElementById("pubBadge");
   if(b){
     b.hidden = !(draf || state.belumTerbit);
-    b.textContent = draf ? "Belum disimpan"
-      : (typeof ghSiap === "function" && ghSiap() && gh.otomatis
-           ? "Tersimpan · belum terkirim" : "Tersimpan · belum diterbitkan");
+    b.textContent = draf ? "Belum disimpan" : "Belum diterbitkan";
+    b.title = draf ? "Klik Simpan untuk menyimpan perubahan"
+                   : "Sudah tersimpan di browser ini, belum masuk ke berkas yang dilihat tim";
     b.classList.toggle("warn", draf);   // oranye hanya selagi belum disimpan
   }
   const s = document.getElementById("bSave");
@@ -512,8 +634,10 @@ function tandaGh(){
   if(!e || typeof gh === "undefined") return;
   const siap = !!(gh.repo && gh.token);
   e.textContent = siap
-    ? (gh.otomatis ? "GitHub aktif · " + gh.repo : "GitHub siap, otomatis mati")
-    : "GitHub belum diatur — perubahan tidak terkirim";
+    ? (gh.otomatis ? "GitHub aktif" : "Otomatis mati")
+    : "GitHub belum diatur";
+  e.title = siap ? gh.repo + " (cabang " + gh.branch + ")"
+                 : "Perubahan tidak terkirim ke mana pun. Atur lewat menu Lainnya.";
   e.className = "badge adminOnly " + (siap && gh.otomatis ? "on" : "warn");
 }
 function toast(msg){
@@ -669,6 +793,8 @@ function render(){
   const todayIso = iso(now.getFullYear(), now.getMonth()+1, now.getDate());
   const keys = visibleKeys();
 
+  app.className = animasiKartu ? "animasi" : "";
+  animasiKartu = false;
   if(!keys.length){
     app.innerHTML = '<div class="empty">' + (monthKeys().length
       ? "Tidak ada bulan yang cocok dengan filter ini."
@@ -717,6 +843,12 @@ function render(){
     html += "</section>";
   }
   app.innerHTML = html;
+  if(selBaru){
+    const el = app.querySelector('.month[data-k="' + selBaru.k + '"] td.d[data-n="' +
+               selBaru.n.replace(/"/g, '\\"') + '"][data-d="' + selBaru.d + '"]');
+    if(el) el.classList.add("baru");
+    selBaru = null;
+  }
 }
 
 function tabelTim(mo, days, tim, urutan){
@@ -859,6 +991,7 @@ document.getElementById("app").addEventListener("click", e => {
     pesan = kapan + (lama ? " — " + MK[lama].label + " diganti " + MK[pen].label
                           : " — ditandai " + MK[pen].label);
   }
+  selBaru = {k: key, n: td.dataset.n, d: d};
   tandai(); aksi(pesan);
   render();
 });
@@ -874,6 +1007,7 @@ document.getElementById("app").addEventListener("contextmenu", e => {
     delete row[td.dataset.d];
     const pesan = td.dataset.n + " · " + td.dataset.d + " " + BULAN[mo.month-1] + " " +
                   mo.year + " — tanda " + MK[lama].label + " dihapus";
+    selBaru = {k: td.closest(".month").dataset.k, n: td.dataset.n, d: td.dataset.d};
     tandai(); aksi(pesan);
     render();
   }
@@ -1009,7 +1143,7 @@ dlgAdd.addEventListener("close", () => {
   const added = ensureHolidays(y);
   state.months[key] = {year:y, month:m, cells:{}};
   if(document.getElementById("aFill").value === "auto") autoFill(key);
-  filterYear = "";
+  filterYear = ""; animasiKartu = true;
   tandai(); buildFilters(); render();
   aksi(BULAN[m-1]+" "+y+" ditambahkan" + (added ? " · "+added+" hari libur "+y+" ikut dibuat" : ""));
   const el = document.querySelector('.month[data-k="'+key+'"]');
@@ -1588,10 +1722,10 @@ document.getElementById("bImport").onclick = () => {
 };
 document.getElementById("bPrint").onclick = () => window.print();
 document.getElementById("fYear").onchange = e => {
-  filterYear = e.target.value; buildFilters(); render();
+  filterYear = e.target.value; animasiKartu = true; buildFilters(); render();
 };
 document.getElementById("fMonth").onchange = e => {
-  filterMonth = e.target.value; render();
+  filterMonth = e.target.value; animasiKartu = true; render();
 };
 
 
@@ -1745,7 +1879,7 @@ function botJalan(teks){
         "<b>" + esc(n) + "</b> tanggal " + blokir[n].join(", ")).join("; ") +
         " &mdash; ditandai <i>Cuti/Izin</i>.</p>";
     }
-    filterYear = ""; filterMonth = "";
+    filterYear = ""; filterMonth = ""; animasiKartu = true;
     return {ok:true, ubah:true, html:html, fokus:key};
   }
 
@@ -1905,6 +2039,13 @@ function tawarkanMuatUlang(stampBaru){
   };
   document.getElementById("barTutup").onclick = () => bar.remove();
 }
+
+// menu Lainnya menutup sendiri setelah dipakai atau saat klik di luar
+document.addEventListener("click", e => {
+  const m = document.getElementById("menuLain");
+  if(!m || !m.open) return;
+  if(!m.contains(e.target) || e.target.closest(".menuPop button")) m.open = false;
+});
 
 /* ---------- mulai ---------- */
 setPen("M");
